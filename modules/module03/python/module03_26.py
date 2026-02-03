@@ -1,3 +1,13 @@
+"""
+Module 03: DynamoDB テーブル作成（Resource API）
+
+デモ内容:
+- boto3.resource('dynamodb') を使用したテーブル作成
+- Waiter を使用したテーブル作成完了の待機
+
+実行方法:
+  python3 module03_26.py
+"""
 import sys
 sys.path.insert(0, '../../../')
 from config import TABLE_NAME

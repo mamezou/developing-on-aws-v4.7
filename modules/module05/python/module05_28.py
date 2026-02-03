@@ -1,3 +1,13 @@
+"""
+Module 05: S3 バケット作成（Resource API）
+
+デモ内容:
+- boto3.resource('s3') を使用したバケット作成
+- Resource API の高レベルな操作
+
+実行方法:
+  python3 module05_28.py
+"""
 import sys
 sys.path.insert(0, '../../../')
 from config import BUCKET_NAME, REGION

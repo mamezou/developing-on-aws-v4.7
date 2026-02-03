@@ -1,3 +1,17 @@
+"""
+Module 03: S3 オブジェクト一覧（Client API vs Resource API）
+
+デモ内容:
+- Client API (list_objects_v2) と Resource API (bucket.objects.all()) の比較
+- 同じ操作を異なるAPIで実装する例
+
+実行方法:
+  python3 module03_16.py
+
+前提条件:
+  - S3バケットが存在すること（module05_28.py で作成）
+  - バケット内にオブジェクトが存在すること
+"""
 import sys
 sys.path.insert(0, '../../../')
 from config import BUCKET_NAME

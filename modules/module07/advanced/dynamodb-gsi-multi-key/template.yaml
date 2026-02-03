@@ -14,10 +14,6 @@ Resources:
           AttributeType: S
         - AttributeName: status
           AttributeType: S
-        - AttributeName: order_date
-          AttributeType: S
-        - AttributeName: amount
-          AttributeType: N
       KeySchema:
         - AttributeName: order_id
           KeyType: HASH
@@ -28,11 +24,6 @@ Resources:
               KeyType: HASH
             - AttributeName: status
               KeyType: RANGE
-            # 2025年11月新機能: 複数属性をソートキーに指定
-            # - AttributeName: order_date
-            #   KeyType: RANGE
-            # - AttributeName: amount
-            #   KeyType: RANGE
           Projection:
             ProjectionType: ALL
 

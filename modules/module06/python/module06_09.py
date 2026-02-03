@@ -1,3 +1,13 @@
+"""
+Module 06: S3 バケット存在確認
+
+デモ内容:
+- head_bucket() を使用したバケット存在確認
+- エラーコードによる状態判定（404: 存在しない、403: 他アカウント所有）
+
+実行方法:
+  python3 module06_09.py
+"""
 import sys
 sys.path.insert(0, '../../../')
 from config import BUCKET_NAME

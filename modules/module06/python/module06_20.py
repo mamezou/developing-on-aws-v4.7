@@ -1,3 +1,17 @@
+"""
+Module 06: S3 オブジェクト取得（Resource API）
+
+デモ内容:
+- boto3.resource('s3') を使用したオブジェクト取得
+- エラーハンドリングの実装例
+
+実行方法:
+  python3 module06_20.py
+
+前提条件:
+  - S3バケットが存在すること
+  - 指定したオブジェクトキーが存在すること
+"""
 import sys
 sys.path.insert(0, '../../../')
 from config import BUCKET_NAME

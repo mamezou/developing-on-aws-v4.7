@@ -1,3 +1,16 @@
+"""
+Module 06: S3 Presigned URL 生成
+
+デモ内容:
+- generate_presigned_url() を使用した署名付きURL生成
+- 一時的なアクセス権限の付与
+
+実行方法:
+  python3 module06_27.py
+
+前提条件:
+  - S3バケットが存在すること
+"""
 import sys
 sys.path.insert(0, '../../../')
 from config import BUCKET_NAME

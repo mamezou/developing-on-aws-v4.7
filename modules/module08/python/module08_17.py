@@ -1,3 +1,13 @@
+"""
+Module 08: DynamoDB テーブル作成 + Waiter（Client API）
+
+デモ内容:
+- boto3.client('dynamodb') を使用したテーブル作成
+- Waiter を使用したテーブル作成完了の待機
+
+実行方法:
+  python3 module08_17.py
+"""
 import sys
 sys.path.insert(0, '../../../')
 from config import TABLE_NAME
