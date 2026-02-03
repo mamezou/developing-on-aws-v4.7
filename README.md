@@ -83,19 +83,12 @@ cd modules/module05/python
 python module05_28.py
 ```
 
-## モジュール対応表
+## モジュール構成
 
-| モジュール | 内容 | 主なサービス |
-|-----------|------|-------------|
-| Module 03 | アクセス許可 | IAM, SDK設定 |
-| Module 04 | ストレージ基礎 | S3 |
-| Module 05 | ストレージオペレーション | S3 |
-| Module 06 | データベース基礎 | DynamoDB |
-| Module 07 | データベースオペレーション | DynamoDB |
-| Module 08 | アプリケーションロジック | Lambda |
-| Module 09 | API管理 | API Gateway |
-| Module 10 | モダンアプリケーション | Step Functions |
-| Module 13 | 監視 | X-Ray, CloudWatch |
+各モジュールのディレクトリには以下が含まれます：
+- `cli/` - AWS CLI コマンドサンプル（Markdown）
+- `python/` - Python (boto3) サンプル
+- `advanced/` - 応用デモ（一部モジュールのみ）
 
 ## 追加デモ
 
