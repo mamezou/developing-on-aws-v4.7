@@ -5,9 +5,25 @@
 - **基本デモ**: `cli/`, `python/` → 講義中のスライド対応サンプル
 - **応用サンプル**: `advanced/` → API比較・自習用の包括的サンプル
 
-## 内容
+## Client API vs Resource API
 
-boto3 の Client API と Resource API の違いを比較できます。
+boto3 には2種類のAPIがあります：
+
+| 項目 | Client API | Resource API |
+|------|------------|--------------|
+| 作成方法 | `boto3.client('dynamodb')` | `boto3.resource('dynamodb')` |
+| 抽象度 | 低レベル（AWS API に近い） | 高レベル（オブジェクト指向） |
+| 戻り値 | dict（辞書） | リソースオブジェクト |
+| データ形式 | 型記述子付き `{'S': 'value'}` | Python ネイティブ型 |
+| 学習コスト | 低い（AWS API ドキュメントと対応） | やや高い |
+| 柔軟性 | 高い（全API操作が可能） | 一部制限あり |
+
+### 使い分けの目安
+
+- **Client API**: 細かい制御が必要、PartiQL を使いたい場合
+- **Resource API**: シンプルなコードで素早く実装したい場合
+
+## 内容
 
 ### client_api/
 低レベル API (boto3.client) を使用した DynamoDB 操作
@@ -22,6 +38,9 @@ boto3 の Client API と Resource API の違いを比較できます。
 - movies_example/: AWS公式ドキュメントベースのサンプル
 - Pagenate-sample/: ページネーションサンプル
 - バッチ操作サンプル
+
+### dynamodb-gsi-multi-key/
+GSI マルチ属性キーのデモ（2025年11月新機能対応予定）
 
 ## 主なサンプル
 
