@@ -1,8 +1,11 @@
+import sys
+sys.path.insert(0, '../../../')
+from config import TABLE_NAME
 import boto3
 
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.create_table(
-    TableName='Notes',
+    TableName=TABLE_NAME,
     AttributeDefinitions=[
         {
             'AttributeName': 'pk',
@@ -18,8 +21,8 @@ table = dynamodb.create_table(
     BillingMode='PAY_PER_REQUEST',
 )
 
-print('テーブルの作成をリクエストしました。')
-table.meta.client.get_waiter('table_exists').wait(TableName='Notes')
+print(f'テーブル {TABLE_NAME} の作成をリクエストしました。')
+table.meta.client.get_waiter('table_exists').wait(TableName=TABLE_NAME)
 print('テーブルの作成が完了しました。')
 
 print(table.item_count)
