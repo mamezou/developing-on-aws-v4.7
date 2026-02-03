@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: DynamoDB GSI Multi-Attribute Key Demo
+
+Resources:
+  OrdersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Orders-GSI-Demo
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: order_id
+          AttributeType: S
+        - AttributeName: customer_id
+          AttributeType: S
+        - AttributeName: status
+          AttributeType: S
+        - AttributeName: order_date
+          AttributeType: S
+        - AttributeName: amount
+          AttributeType: N
+      KeySchema:
+        - AttributeName: order_id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: CustomerStatusIndex
+          KeySchema:
+            - AttributeName: customer_id
+              KeyType: HASH
+            - AttributeName: status
+              KeyType: RANGE
+            # 2025年11月新機能: 複数属性をソートキーに指定
+            # - AttributeName: order_date
+            #   KeyType: RANGE
+            # - AttributeName: amount
+            #   KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+
+Outputs:
+  TableName:
+    Description: DynamoDB Table Name
+    Value: !Ref OrdersTable
+  TableArn:
+    Description: DynamoDB Table ARN
+    Value: !GetAtt OrdersTable.Arn

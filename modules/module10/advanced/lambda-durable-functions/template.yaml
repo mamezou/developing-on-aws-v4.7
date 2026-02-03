@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Lambda Durable Functions - Order Processing Demo
+
+Resources:
+  OrderProcessingFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: order-processing-durable
+      Runtime: python3.13
+      Handler: app.lambda_handler
+      Timeout: 900
+      MemorySize: 256
+      # Durable Functions 設定
+      DurableFunctionConfiguration:
+        Enabled: true
+        ExecutionTimeout: 86400  # 最大1日
+        RetentionPeriod: 604800  # 7日間
+      Policies:
+        - CloudWatchLogsFullAccess
+
+Outputs:
+  FunctionName:
+    Description: Lambda Function Name
+    Value: !Ref OrderProcessingFunction
+  FunctionArn:
+    Description: Lambda Function ARN
+    Value: !GetAtt OrderProcessingFunction.Arn
