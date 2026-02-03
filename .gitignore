@@ -1,3 +1,10 @@
 __pycache__/
 *.pyc
 .env
+
+# CDK
+cdk.out/
+node_modules/
+*.js
+*.d.ts
+!jest.config.js
