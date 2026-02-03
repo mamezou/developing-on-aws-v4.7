@@ -4,15 +4,13 @@
 '''
 import boto3
 from botocore.exceptions import NoCredentialsError,ClientError
+from myconfig import TRAINING_TABLE as table_name
 
 if __name__ == '__main__':
     try:
       # DynamoDBとのセッション開始
       dynamodb = boto3.resource('dynamodb')    
-      # dynamodb = boto3.resource('dynamodb', region_name="ap-northeast-1") # リージョンを明示的に指定する方法
-
-      # テーブル名
-      table_name = "Training"   
+      # dynamodb = boto3.resource('dynamodb', region_name="ap-northeast-1") # リージョンを明示的に指定する方法   
 
       # テーブルの作成
       print("----- テーブル作成 開始" )

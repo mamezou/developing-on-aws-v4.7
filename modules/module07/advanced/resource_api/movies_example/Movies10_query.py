@@ -6,8 +6,7 @@
 '''
 import boto3
 from boto3.dynamodb.conditions import Key
-
-TABLE_NAME = 'Movies'
+from myconfig import TABLE_NAME
 
 def query_movies(year, dynamodb=None):
     if not dynamodb:

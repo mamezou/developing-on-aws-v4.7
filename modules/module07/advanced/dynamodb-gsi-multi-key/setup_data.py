@@ -7,13 +7,9 @@ DynamoDB GSI マルチ属性キー デモ - サンプルデータ投入
 import boto3
 from datetime import datetime, timedelta
 import random
-import sys
-sys.path.insert(0, '../../../../')
-from config import REGION
+from myconfig import TABLE_NAME, REGION
 
 dynamodb = boto3.client('dynamodb', region_name=REGION)
-
-TABLE_NAME = 'Orders-GSI-Demo'
 
 CUSTOMERS = ['CUST-123', 'CUST-456', 'CUST-789']
 STATUSES = ['pending', 'processing', 'completed', 'cancelled']

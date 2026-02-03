@@ -1,11 +1,17 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: DynamoDB GSI Multi-Attribute Key Demo
 
+Parameters:
+  StudentId:
+    Type: String
+    Default: instructor
+    Description: Student ID for unique resource naming
+
 Resources:
   OrdersTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: Orders-GSI-Demo
+      TableName: !Sub 'Orders-GSI-Demo-${StudentId}'
       BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
         - AttributeName: order_id

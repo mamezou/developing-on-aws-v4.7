@@ -3,8 +3,7 @@
   テーブル削除
 '''
 import boto3
-
-TABLE_NAME = 'Movies'
+from myconfig import TABLE_NAME
 
 def delete_movie_table(dynamodb=None):
     if not dynamodb:

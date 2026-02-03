@@ -8,8 +8,7 @@
 from pprint import pprint
 import boto3
 from botocore.exceptions import ClientError
-
-TABLE_NAME = 'Movies'
+from myconfig import TABLE_NAME
 
 def remove_actors(title, year, actor_count, dynamodb=None):
     if not dynamodb:

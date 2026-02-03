@@ -6,15 +6,13 @@
 import boto3
 from decimal import *
 import json
-
-tableName = 'pagenate-test'
-loadFile  = 'testdata.json'
+from myconfig import TABLE_NAME
 
 # テーブルを作成する関数
 def delete_test_table():
     dynamodb = boto3.resource('dynamodb', region_name="ap-northeast-1")
     # 既存のテーブル削除
-    table = dynamodb.Table(tableName)
+    table = dynamodb.Table(TABLE_NAME)
     table.delete()
     table.wait_until_not_exists()
 

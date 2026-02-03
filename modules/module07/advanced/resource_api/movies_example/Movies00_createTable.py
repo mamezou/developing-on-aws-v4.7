@@ -4,8 +4,7 @@
   映画の情報を管理するテーブル。パーティションキー year, ソートキー title
 '''
 import boto3
-
-TABLE_NAME = 'Movies'
+from myconfig import TABLE_NAME
 
 def create_movie_table(dynamodb=None):
     if not dynamodb:

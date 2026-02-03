@@ -5,8 +5,7 @@
 '''
 from pprint import pprint
 import boto3
-
-TABLE_NAME = 'Movies'
+from myconfig import TABLE_NAME
 
 def put_movie(title, year, plot, rating, dynamodb=None):
     if not dynamodb:

@@ -7,8 +7,7 @@
 from pprint import pprint
 import boto3
 from boto3.dynamodb.conditions import Key
-
-TABLE_NAME = 'Movies'
+from myconfig import TABLE_NAME
 
 def query_and_project_movies(year, title_range, dynamodb=None):
     if not dynamodb:

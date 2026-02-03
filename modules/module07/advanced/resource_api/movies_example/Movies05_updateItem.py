@@ -6,8 +6,7 @@
 from decimal import Decimal
 from pprint import pprint
 import boto3
-
-TABLE_NAME = 'Movies'
+from myconfig import TABLE_NAME
 
 def update_movie(title, year, rating, plot, actors, dynamodb=None):
     if not dynamodb:

@@ -6,13 +6,14 @@
 from pprint import pprint
 import boto3
 from boto3.dynamodb.conditions import Key
+from myconfig import TABLE_NAME
 
 def scan_items(query_range, display_items, dynamodb=None):
     if not dynamodb:
         dynamodb = boto3.resource('dynamodb', region_name="ap-northeast-1")
 
     # ソートキー seq 1 から12 までの項目をもつテーブル
-    table = dynamodb.Table('pagenate-test')
+    table = dynamodb.Table(TABLE_NAME)
 
     # Scanに指定するパラメータを定義
     # seq 1から10の範囲を条件に指定。ただし Limit 3アイテムとする。

@@ -6,8 +6,7 @@
 from pprint import pprint
 import boto3
 from botocore.exceptions import ClientError
-
-TABLE_NAME = 'Movies'
+from myconfig import TABLE_NAME
 
 def get_movie(title, year, dynamodb=None):
     if not dynamodb:

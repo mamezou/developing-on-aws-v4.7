@@ -43,19 +43,20 @@ EC サイトの注文データで、顧客ごとに以下のクエリを実行�
 ## 実行手順
 
 ```bash
-# 1. テーブル作成
+# 1. テーブル作成（STUDENT_ID は環境変数から自動取得、または明示的に指定）
 aws cloudformation create-stack \
-  --stack-name demo-gsi-multi-key \
-  --template-body file://template.yaml
+  --stack-name demo-gsi-multi-key-${STUDENT_ID:-instructor} \
+  --template-body file://template.yaml \
+  --parameters ParameterKey=StudentId,ParameterValue=${STUDENT_ID:-instructor}
 
 # 2. サンプルデータ投入
-python setup_data.py
+python3 setup_data.py
 
 # 3. クエリデモ実行
-python query_demo.py
+python3 query_demo.py
 
 # 4. クリーンアップ
-aws cloudformation delete-stack --stack-name demo-gsi-multi-key
+aws cloudformation delete-stack --stack-name demo-gsi-multi-key-${STUDENT_ID:-instructor}
 ```
 
 ## 制約事項

@@ -5,14 +5,12 @@
 import boto3
 from boto3.dynamodb.conditions import Key
 from botocore.exceptions import NoCredentialsError,ClientError
+from myconfig import TRAINING_QUERY_SCAN_TABLE as table_name
 
 if __name__ == '__main__':
     try:
       # DynamoDBとのセッション開始
-      dynamodb = boto3.resource('dynamodb')    
- 
-      # テーブル名
-      table_name = "TrainingForQueryScan"   
+      dynamodb = boto3.resource('dynamodb')   
 
       # テーブルの作成
       print("----- テーブル作成 開始" )

@@ -1,5 +1,5 @@
 """
-DynamoDB Client API サンプル用設定
+DynamoDB GSI マルチ属性キー デモ用設定
 
 共通の config.py から STUDENT_ID を取得し、一意のテーブル名を生成します。
 """
@@ -9,12 +9,13 @@ import os
 # プロジェクトルートをパスに追加
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
 
-from config import STUDENT_ID
+from config import STUDENT_ID, REGION
 
 # テーブル名（受講生ごとに一意）
-table_name = f'score-{STUDENT_ID}'
-index_name = 'game_index'
+TABLE_NAME = f'Orders-GSI-Demo-{STUDENT_ID}'
+INDEX_NAME = 'CustomerStatusIndex'
 
 if __name__ == "__main__":
-    print(f"Table Name: {table_name}")
-    print(f"Index Name: {index_name}")
+    print(f"Table Name: {TABLE_NAME}")
+    print(f"Index Name: {INDEX_NAME}")
+    print(f"Region: {REGION}")

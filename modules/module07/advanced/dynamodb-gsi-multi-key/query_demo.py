@@ -5,14 +5,10 @@ GSI を使用して複合条件でクエリを実行します。
 """
 
 import boto3
-import sys
-sys.path.insert(0, '../../../../')
-from config import REGION
+from myconfig import TABLE_NAME, INDEX_NAME, REGION
 
 dynamodb = boto3.client('dynamodb', region_name=REGION)
 
-TABLE_NAME = 'Orders-GSI-Demo'
-INDEX_NAME = 'CustomerStatusIndex'
 CUSTOMER_ID = 'CUST-123'
 
 
