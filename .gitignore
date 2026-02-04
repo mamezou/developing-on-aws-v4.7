@@ -2,6 +2,9 @@ __pycache__/
 *.pyc
 .env
 
+# Kiro
+.kiro/
+
 # CDK
 cdk.out/
 node_modules/
