@@ -1,13 +1,17 @@
-# 
+# Module 04: AWS CLI プロファイル
 
 ## 変数定義
 
-```
-# 一意な任意のバケット名を指定します。
-BUCKET_NAME=developing-on-aws-sample-`date +"%Y%m%d"`
+```bash
+# バケット名を設定（config.py の BUCKET_NAME と同じ形式）
+STUDENT_ID=${STUDENT_ID:-instructor}
+ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+BUCKET_NAME="dev-on-aws-${STUDENT_ID}-${ACCOUNT_ID}"
 
-# ~/.aws/configで設定済みのprofile名を指定します。
+# ~/.aws/config で設定済みの profile 名を指定
 PROFILE=staging
+
+echo "バケット名: ${BUCKET_NAME}"
 ```
 
 ## デフォルトプロファイルを使用したコマンド
