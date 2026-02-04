@@ -6,11 +6,11 @@
 from pprint import pprint
 import boto3
 from boto3.dynamodb.conditions import Key
-from myconfig import TABLE_NAME
+from myconfig import TABLE_NAME, REGION
 
 def scan_items(query_range, display_items, dynamodb=None):
     if not dynamodb:
-        dynamodb = boto3.resource('dynamodb', region_name="ap-northeast-1")
+        dynamodb = boto3.resource('dynamodb', region_name=REGION)
 
     # ソートキー seq 1 から12 までの項目をもつテーブル
     table = dynamodb.Table(TABLE_NAME)

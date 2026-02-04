@@ -9,11 +9,11 @@
 from pprint import pprint
 import boto3
 from boto3.dynamodb.conditions import Key
-from myconfig import TABLE_NAME
+from myconfig import TABLE_NAME, REGION
 
 def scan_movies(year_range, display_movies, dynamodb=None):
     if not dynamodb:
-        dynamodb = boto3.resource('dynamodb', region_name="ap-northeast-1")
+        dynamodb = boto3.resource('dynamodb', region_name=REGION)
 
     table = dynamodb.Table(TABLE_NAME)
     # scanに指定するパラメータを定義

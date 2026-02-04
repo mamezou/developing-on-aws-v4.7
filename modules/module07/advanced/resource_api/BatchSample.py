@@ -1,12 +1,19 @@
-'''
-   バッチサンプル
-'''
-from __future__ import print_function # Python 2/3 compatibility
+"""
+バッチサンプル
+
+batch_get_item を使用して複数の項目を一度に取得するデモ。
+
+前提条件:
+  - LimitTest テーブルが存在すること（myconfig.py で定義）
+  - userid='1' と userid='2' の項目が存在すること
+"""
+from __future__ import print_function
 import boto3
 import json
 import decimal
 from boto3.dynamodb.conditions import Key, Attr
 from botocore.exceptions import ClientError
+from myconfig import LIMIT_TEST_TABLE, REGION
 
 # Helper class to convert a DynamoDB item to JSON.
 class DecimalEncoder(json.JSONEncoder):
@@ -18,7 +25,7 @@ class DecimalEncoder(json.JSONEncoder):
                 return int(o)
         return super(DecimalEncoder, self).default(o)
 
-dynamodb = boto3.resource("dynamodb", region_name='ap-northeast-1')
+dynamodb = boto3.resource("dynamodb", region_name=REGION)
 
 userid1 = "1"
 userid2 = "2"
@@ -28,7 +35,7 @@ try:
     # （指定したキーで実際に存在するものだけ取得する）
     response = dynamodb.batch_get_item(
         RequestItems={
-            'LimitTest': {
+            LIMIT_TEST_TABLE: {
                 'Keys': [
                     {
                         'userid': userid1
@@ -49,4 +56,3 @@ else:
     print("BatchGetItem succeeded:")
     print(item)
     print(response)
-    

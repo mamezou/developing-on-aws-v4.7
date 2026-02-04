@@ -7,11 +7,11 @@
 from pprint import pprint
 import boto3
 from boto3.dynamodb.conditions import Key
-from myconfig import TABLE_NAME
+from myconfig import TABLE_NAME, REGION
 
 def query_and_project_movies(year, title_range, dynamodb=None):
     if not dynamodb:
-        dynamodb = boto3.resource('dynamodb', region_name="ap-northeast-1")
+        dynamodb = boto3.resource('dynamodb', region_name=REGION)
 
     table = dynamodb.Table(TABLE_NAME)
     print(f"Get year, title, genres, and lead actor")

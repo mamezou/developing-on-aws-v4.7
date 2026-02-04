@@ -6,11 +6,11 @@
 '''
 import boto3
 from boto3.dynamodb.conditions import Key
-from myconfig import TABLE_NAME
+from myconfig import TABLE_NAME, REGION
 
 def query_movies(year, dynamodb=None):
     if not dynamodb:
-        dynamodb = boto3.resource('dynamodb', region_name="ap-northeast-1")  
+        dynamodb = boto3.resource('dynamodb', region_name=REGION)  
     table = dynamodb.Table(TABLE_NAME)
     # Query実行
     response = table.query(

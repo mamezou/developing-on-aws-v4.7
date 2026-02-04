@@ -9,13 +9,13 @@
 import json
 import boto3
 from decimal import *
-from myconfig import TABLE_NAME
+from myconfig import TABLE_NAME, REGION
 
 LOAD_LIMIT = 200  # ロードする最大件数（None で全件ロード）
 
 def load_movies(movies, dynamodb=None):
     if not dynamodb:
-        dynamodb = boto3.resource('dynamodb', region_name="ap-northeast-1")
+        dynamodb = boto3.resource('dynamodb', region_name=REGION)
 
     table = dynamodb.Table(TABLE_NAME)
     for movie in movies:

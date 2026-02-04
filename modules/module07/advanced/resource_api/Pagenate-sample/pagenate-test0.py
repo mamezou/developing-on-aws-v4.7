@@ -6,13 +6,13 @@
 import boto3
 from decimal import *
 import json
-from myconfig import TABLE_NAME
+from myconfig import TABLE_NAME, REGION
 
 loadFile  = 'testdata.json'
 
 # テーブルを作成する関数
 def create_test_table():
-    dynamodb = boto3.resource('dynamodb', region_name="ap-northeast-1")
+    dynamodb = boto3.resource('dynamodb', region_name=REGION)
     # テーブル作成
     table = dynamodb.create_table(
         TableName=TABLE_NAME,
@@ -50,7 +50,7 @@ def create_test_table():
 def load_test_items():
    with open(loadFile) as json_file:
         test_list = json.load(json_file, parse_float=Decimal)
-   dynamodb = boto3.resource('dynamodb', region_name="ap-northeast-1")
+   dynamodb = boto3.resource('dynamodb', region_name=REGION)
    table = dynamodb.Table(TABLE_NAME)
    for test_item in test_list:
        id =  test_item['id']

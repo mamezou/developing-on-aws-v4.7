@@ -6,11 +6,11 @@
 import boto3
 from decimal import *
 import json
-from myconfig import TABLE_NAME
+from myconfig import TABLE_NAME, REGION
 
 # テーブルを作成する関数
 def delete_test_table():
-    dynamodb = boto3.resource('dynamodb', region_name="ap-northeast-1")
+    dynamodb = boto3.resource('dynamodb', region_name=REGION)
     # 既存のテーブル削除
     table = dynamodb.Table(TABLE_NAME)
     table.delete()

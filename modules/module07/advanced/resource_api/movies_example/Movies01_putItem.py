@@ -5,11 +5,11 @@
 '''
 from pprint import pprint
 import boto3
-from myconfig import TABLE_NAME
+from myconfig import TABLE_NAME, REGION
 
 def put_movie(title, year, plot, rating, dynamodb=None):
     if not dynamodb:
-        dynamodb = boto3.resource('dynamodb', region_name="ap-northeast-1")
+        dynamodb = boto3.resource('dynamodb', region_name=REGION)
     table = dynamodb.Table(TABLE_NAME)
     # put_item実行
     response = table.put_item(

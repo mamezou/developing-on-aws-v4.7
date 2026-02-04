@@ -4,12 +4,11 @@
   映画の情報を管理するテーブル。パーティションキー year, ソートキー title
 '''
 import boto3
-from myconfig import TABLE_NAME
+from myconfig import TABLE_NAME, REGION
 
 def create_movie_table(dynamodb=None):
     if not dynamodb:
-        dynamodb = boto3.resource('dynamodb', region_name="ap-northeast-1")
-        #dynamodb = boto3.resource('dynamodb')
+        dynamodb = boto3.resource('dynamodb', region_name=REGION)
     # テーブル作成
     table = dynamodb.create_table(
         TableName=TABLE_NAME,
