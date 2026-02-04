@@ -9,31 +9,47 @@ SDK を使うメリットを実感するデモです。手動実装との比較�
 
 ## Part 1: Waiter デモ
 
-EC2 インスタンスを起動して、running 状態になるまで待機します。
+DynamoDB テーブルを作成して、ACTIVE 状態になるまで待機します。
 
 ### 手動実装（❌ 非推奨）
 
 ```python
 # 自前でポーリング実装が必要
 while True:
-    response = ec2.describe_instances(InstanceIds=[instance_id])
-    state = response['Reservations'][0]['Instances'][0]['State']['Name']
-    if state == 'running':
+    response = dynamodb.describe_table(TableName=table_name)
+    status = response['Table']['TableStatus']
+    if status == 'ACTIVE':
         break
-    time.sleep(5)  # 固定間隔、エラーハンドリングなし
+    time.sleep(2)  # 固定間隔、エラーハンドリングなし
 ```
 
 ### SDK Waiter（✅ 推奨）
 
 ```python
-waiter = ec2_client.get_waiter('instance_running')
-waiter.wait(InstanceIds=[instance_id])
+waiter = dynamodb.get_waiter('table_exists')
+waiter.wait(TableName=table_name)
 ```
 
 ### 実行
 
 ```bash
-python waiter_demo.py
+python3 waiter_demo.py
+```
+
+### 出力例
+
+```
+=== 手動ポーリング（非推奨）===
+テーブル作成リクエスト: waiter-demo-instructor-1234567890
+  ポーリング 1: CREATING
+  ポーリング 2: CREATING
+  ポーリング 3: ACTIVE
+✅ テーブル作成完了（6.2秒、3回ポーリング）
+
+=== Waiter 使用（推奨）===
+テーブル作成リクエスト: waiter-demo-instructor-1234567890-waiter
+Waiter で待機中...
+✅ テーブル作成完了（5.8秒）
 ```
 
 ## Part 2: Paginator デモ
@@ -77,7 +93,7 @@ python paginator_demo.py
 
 ## ファイル一覧
 
-- `waiter_demo.py` - EC2 Waiter デモ
+- `waiter_demo.py` - DynamoDB Waiter デモ（手動ポーリングとの比較）
 - `paginator_demo.py` - S3 Paginator デモ
 - `setup_s3_data.py` - ダミーデータ作成スクリプト
 
