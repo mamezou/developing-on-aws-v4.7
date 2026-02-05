@@ -33,6 +33,9 @@ waiter.wait(TableName=table_name)
 ### 実行
 
 ```bash
+# ディレクトリ移動
+cd modules/module03/advanced/sdk-waiter-paginator
+
 python3 waiter_demo.py
 ```
 
@@ -85,10 +88,10 @@ for page in paginator.paginate(Bucket=bucket_name):
 
 ```bash
 # 事前準備（ダミーデータ作成）
-python setup_s3_data.py
+python3 setup_s3_data.py
 
 # デモ実行
-python paginator_demo.py
+python3 paginator_demo.py
 ```
 
 ## ファイル一覧

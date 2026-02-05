@@ -49,17 +49,20 @@ aws sts get-caller-identity
 ## 実行例
 
 ```bash
+# ディレクトリ移動
+cd modules/module05/advanced/client_api
+
 # バケット作成
-python client01-create-bucket.py
+python3 client01-create-bucket.py
 
 # ファイルアップロード
-python client03-upload-file.py
+python3 client03-upload-file.py
 
 # オブジェクト一覧
-python client07-list-object.py
+python3 client07-list-object.py
 
 # クリーンアップ
-python client12-delete-bucket.py
+python3 client12-delete-bucket.py
 ```
 
 ## 参考

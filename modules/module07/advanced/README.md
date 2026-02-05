@@ -19,11 +19,12 @@ Python では「ドキュメントインターフェイス」相当の Resource 
 LSI と GSI の違いを EC サイトの注文テーブルで体験するデモ
 
 ```bash
-cd lsi-gsi-comparison
-python setup_table.py   # テーブル作成（LSI付き）→ GSI追加
-python load_data.py     # サンプルデータ投入
-python query_demo.py    # クエリ比較
-python cleanup.py       # クリーンアップ
+cd modules/module07/advanced/lsi-gsi-comparison
+
+python3 setup_table.py   # テーブル作成（LSI付き）→ GSI追加
+python3 load_data.py     # サンプルデータ投入
+python3 query_demo.py    # クエリ比較
+python3 cleanup.py       # クリーンアップ
 ```
 
 ### dynamodb-gsi-multi-key/

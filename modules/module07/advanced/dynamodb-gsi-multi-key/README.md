@@ -43,6 +43,9 @@ EC サイトの注文データで、顧客ごとに以下のクエリを実行�
 ## 実行手順
 
 ```bash
+# ディレクトリ移動
+cd modules/module07/advanced/dynamodb-gsi-multi-key
+
 # 1. テーブル作成（STUDENT_ID は環境変数から自動取得、または明示的に指定）
 aws cloudformation create-stack \
   --stack-name demo-gsi-multi-key-${STUDENT_ID:-instructor} \

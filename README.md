@@ -10,20 +10,15 @@ developing-on-aws-v4.7/
 ├── modules/            # モジュール別デモコード
 │   ├── module03/       # アクセス許可
 │   ├── module04/       # ストレージ（S3基礎）
-│   ├── module05/       # ストレージオペレーション
-│   ├── module06/       # データベース（DynamoDB基礎）
-│   ├── module07/       # データベースオペレーション
-│   ├── module08/       # Lambda
-│   ├── module09/       # API Gateway
-│   ├── module10/       # モダンアプリケーション
-│   └── module13/       # 監視（X-Ray）
-├── demo/               # 追加デモ
-│   ├── lambda-durable-functions/
-│   ├── sdk-waiter-paginator/
-│   └── dynamodb-gsi-multi-key/
+│   ├── module05/       # Storage 1
+│   ├── module06/       # Storage 2
+│   ├── module07/       # Database 1
+│   ├── module08/       # Database 2
+│   ├── module09/       # Lambda詳細
+│   ├── module10/       # Step Functions
+│   └── module13/       # SAM CLI
 └── infra/              # インフラコード（受講者環境用）
-    ├── cdk/
-    └── scripts/
+    └── cdk/
 ```
 
 ## 前提条件
@@ -70,17 +65,25 @@ aws sts get-caller-identity
 
 ## 使い方
 
+各モジュールの README を参照してください。
+
+| モジュール | 内容 | README |
+|-----------|------|--------|
+| Module 03 | SDK Waiter & Paginator | [advanced/sdk-waiter-paginator](modules/module03/advanced/sdk-waiter-paginator/README.md) |
+| Module 05 | S3 操作 | [advanced](modules/module05/advanced/README.md) |
+| Module 07 | DynamoDB / LSI vs GSI | [advanced](modules/module07/advanced/README.md) |
+
 ### CLI サンプル
 
-各モジュールの `cli/` ディレクトリにMarkdownファイルがあります。コードブロック内のコマンドをターミナルで実行してください。
+各モジュールの `cli/` ディレクトリに Markdown ファイルがあります。コードブロック内のコマンドをターミナルで実行してください。
 
 ### Python サンプル
 
-各モジュールの `python/` ディレクトリにPythonスクリプトがあります。
+各モジュールの `python/` ディレクトリに Python スクリプトがあります。
 
 ```bash
 cd modules/module05/python
-python module05_28.py
+python3 module05_28.py
 ```
 
 ## モジュール構成
@@ -89,17 +92,6 @@ python module05_28.py
 - `cli/` - AWS CLI コマンドサンプル（Markdown）
 - `python/` - Python (boto3) サンプル
 - `advanced/` - 応用デモ（一部モジュールのみ）
-
-## 追加デモ
-
-### Lambda Durable Functions (Module 8/10)
-2024年12月リリースの新機能。コードファーストでマルチステップワークフローを構築。
-
-### SDK Waiter & Paginator (Module 2)
-SDKを使うメリットを実感するデモ。手動実装との比較。
-
-### DynamoDB GSI マルチ属性キー (Module 6/7)
-2025年11月リリースの新機能。合成キー不要で複合条件クエリが可能。
 
 ## 参考リンク
 

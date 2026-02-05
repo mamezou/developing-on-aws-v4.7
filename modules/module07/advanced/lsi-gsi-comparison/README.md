@@ -38,17 +38,20 @@ GSI: product_id (PK) + order_date (SK)
 ## 実行方法
 
 ```bash
-# 1. テーブル作成（LSI付き）
-python setup_table.py
+# ディレクトリ移動
+cd modules/module07/advanced/lsi-gsi-comparison
+
+# 1. テーブル作成（LSI付き）→ GSI追加
+python3 setup_table.py
 
 # 2. サンプルデータ投入
-python load_data.py
+python3 load_data.py
 
 # 3. クエリ比較デモ
-python query_demo.py
+python3 query_demo.py
 
 # 4. クリーンアップ
-python cleanup.py
+python3 cleanup.py
 ```
 
 ## 判断のポイント
