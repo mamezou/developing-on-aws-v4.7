@@ -1,34 +1,46 @@
 """
 DynamoDB GSI マルチ属性キー デモ - クリーンアップ
 
-テーブルを削除します。
+両方のテーブルを削除します。
 """
 
 import boto3
 from botocore.exceptions import ClientError
-from myconfig import TABLE_NAME, REGION
+from myconfig import TABLE_TRADITIONAL, TABLE_MULTI_ATTR, REGION
 
 dynamodb = boto3.client('dynamodb', region_name=REGION)
 
 
-def delete_table():
-    print(f"テーブル削除: {TABLE_NAME}")
+def delete_table(table_name):
+    print(f"テーブル削除: {table_name}")
     
     try:
-        dynamodb.delete_table(TableName=TABLE_NAME)
+        dynamodb.delete_table(TableName=table_name)
         
-        # テーブルが削除されるまで待機
         waiter = dynamodb.get_waiter('table_not_exists')
-        waiter.wait(TableName=TABLE_NAME)
+        waiter.wait(TableName=table_name)
         
-        print(f"✅ テーブル削除完了: {TABLE_NAME}")
+        print(f"   ✅ 削除完了")
         
     except ClientError as e:
         if e.response['Error']['Code'] == 'ResourceNotFoundException':
-            print(f"⚠️ テーブルは存在しません: {TABLE_NAME}")
+            print(f"   ⚠️ 存在しません")
         else:
             raise
 
 
+def main():
+    print("=" * 60)
+    print("DynamoDB GSI マルチ属性キー デモ - クリーンアップ")
+    print("=" * 60)
+    
+    delete_table(TABLE_TRADITIONAL)
+    delete_table(TABLE_MULTI_ATTR)
+    
+    print("\n" + "=" * 60)
+    print("✅ クリーンアップ完了")
+    print("=" * 60)
+
+
 if __name__ == '__main__':
-    delete_table()
+    main()

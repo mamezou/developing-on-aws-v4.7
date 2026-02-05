@@ -1,7 +1,5 @@
 """
 DynamoDB GSI マルチ属性キー デモ用設定
-
-共通の config.py から STUDENT_ID を取得し、一意のテーブル名を生成します。
 """
 import sys
 import os
@@ -12,10 +10,16 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..', '..
 from config import STUDENT_ID, REGION
 
 # テーブル名（受講生ごとに一意）
-TABLE_NAME = f'Orders-GSI-Demo-{STUDENT_ID}'
+# 従来方式（合成キー）
+TABLE_TRADITIONAL = f'Orders-Traditional-{STUDENT_ID}'
+# マルチ属性キー方式
+TABLE_MULTI_ATTR = f'Orders-MultiAttr-{STUDENT_ID}'
+
+# GSI 名
 INDEX_NAME = 'CustomerStatusIndex'
 
 if __name__ == "__main__":
-    print(f"Table Name: {TABLE_NAME}")
-    print(f"Index Name: {INDEX_NAME}")
+    print(f"Student ID: {STUDENT_ID}")
     print(f"Region: {REGION}")
+    print(f"Traditional Table: {TABLE_TRADITIONAL}")
+    print(f"Multi-Attr Table: {TABLE_MULTI_ATTR}")
