@@ -1,60 +1,49 @@
-# Module 07 - 応用サンプル（自習用）
+# Module 07 - DynamoDB 応用サンプル
 
-このディレクトリは講義の補足資料です。
+## Python SDK の DynamoDB インターフェイス
 
-- **基本デモ**: `cli/`, `python/` → 講義中のスライド対応サンプル
-- **応用サンプル**: `advanced/` → API比較・自習用の包括的サンプル
+スライドでは3種類のインターフェイスが紹介されていますが、Python (boto3) での対応は以下の通りです:
 
-## Client API vs Resource API
+| スライドの分類 | Python (boto3) | 説明 |
+|---------------|----------------|------|
+| オブジェクト永続性 | ❌ なし | .NET, Java には DynamoDBMapper 等がある |
+| ドキュメントインターフェイス | `boto3.resource('dynamodb')` | 型記述子不要、Python型で直接操作 |
+| 低レベルインターフェイス | `boto3.client('dynamodb')` | 型記述子必要 `{'S': 'value'}` |
 
-boto3 には2種類のAPIがあります：
+Python では「ドキュメントインターフェイス」相当の Resource API が実質的な高レベル API です。
+オブジェクト永続性（ORM）が必要な場合は、サードパーティの [PynamoDB](https://pynamodb.readthedocs.io/) などを検討してください。
 
-| 項目 | Client API | Resource API |
-|------|------------|--------------|
-| 作成方法 | `boto3.client('dynamodb')` | `boto3.resource('dynamodb')` |
-| 抽象度 | 低レベル（AWS API に近い） | 高レベル（オブジェクト指向） |
-| 戻り値 | dict（辞書） | リソースオブジェクト |
-| データ形式 | 型記述子付き `{'S': 'value'}` | Python ネイティブ型 |
-| 学習コスト | 低い（AWS API ドキュメントと対応） | やや高い |
-| 柔軟性 | 高い（全API操作が可能） | 一部制限あり |
+## デモ
 
-### 使い分けの目安
+### lsi-gsi-comparison/
+LSI と GSI の違いを EC サイトの注文テーブルで体験するデモ
 
-- **Client API**: 細かい制御が必要、PartiQL を使いたい場合
-- **Resource API**: シンプルなコードで素早く実装したい場合
-
-## 内容
-
-### client_api/
-低レベル API (boto3.client) を使用した DynamoDB 操作
-- テーブル作成/削除
-- 項目操作（put, get, update, delete）
-- Query / Scan / PartiQL
-- ページネーション
-- GSI（グローバルセカンダリインデックス）
-
-### resource_api/
-高レベル API (boto3.resource) を使用した DynamoDB 操作
-- movies_example/: AWS公式ドキュメントベースのサンプル
-- Pagenate-sample/: ページネーションサンプル
-- バッチ操作サンプル
+```bash
+cd lsi-gsi-comparison
+python setup_table.py   # テーブル作成（LSI付き）→ GSI追加
+python load_data.py     # サンプルデータ投入
+python query_demo.py    # クエリ比較
+python cleanup.py       # クリーンアップ
+```
 
 ### dynamodb-gsi-multi-key/
 GSI マルチ属性キーのデモ（2025年11月新機能対応予定）
 
-## 主なサンプル
+## 自習用（optional/）
 
-| 操作 | client_api | resource_api |
-|------|------------|--------------|
-| テーブル作成 | create_table.py | movies_example/Movies00_createTable.py |
-| 項目追加 | put_item.py | movies_example/Movies01_putItem.py |
-| 項目取得 | get_item.py | movies_example/Movies02_getItem.py |
-| 項目更新 | update_item.py | movies_example/Movies05_updateItem.py |
-| クエリ | query.py | movies_example/Movies10_query.py |
-| スキャン | pagenate_scan.py | movies_example/Movies12_scan.py |
-| GSI | add_gsi.py, query_gsi.py | - |
+講義ではデモしませんが、興味のある方は参照してください。
+
+### optional/client_api/
+低レベル API (`boto3.client('dynamodb')`) のサンプル集
+- 型記述子 `{'S': 'value'}` を使った操作
+- PartiQL、GSI追加など
+
+### optional/resource_api/
+ドキュメントインターフェイス (`boto3.resource('dynamodb')`) のサンプル集
+- Python型での直接操作
+- movies_example/: AWS公式ドキュメントベースのサンプル
 
 ## 参考
 
-- 元リポジトリ: https://github.com/tetsuo-nobe/dev_on_aws
-- [AWS DynamoDB Getting Started](https://docs.aws.amazon.com/ja_jp/amazondynamodb/latest/developerguide/GettingStarted.html)
+- [DynamoDB Developer Guide](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/)
+- [boto3 DynamoDB Resource](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html)
