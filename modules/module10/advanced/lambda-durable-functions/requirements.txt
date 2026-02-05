@@ -1,3 +1,0 @@
-# Lambda Durable Functions SDK
-# 2025年12月 GA
-aws-durable-execution-sdk-python>=1.0.0
