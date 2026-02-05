@@ -32,7 +32,7 @@ def create_table_with_lsi():
             {'AttributeName': 'customer_id', 'AttributeType': 'S'},
             {'AttributeName': 'order_date', 'AttributeType': 'S'},
             {'AttributeName': 'amount', 'AttributeType': 'N'},
-            {'AttributeName': 'product_id', 'AttributeType': 'S'},
+            # product_id は GSI 追加時に定義する
         ],
         KeySchema=[
             {'AttributeName': 'customer_id', 'KeyType': 'HASH'},
