@@ -4,12 +4,12 @@
 '''
 import boto3
 from botocore.exceptions import NoCredentialsError,ClientError
-from mybucket import bucket_name 
+from mybucket import bucket_name, get_local_path
 
 def put_object():
     s3 = boto3.resource('s3')          # S3リソース取得
     key = 'cat.jpg'                    # オブジェクトのキー(ファイル名)
-    localfile =  open('cat.jpg','rb')
+    localfile =  open(get_local_path('cat.jpg'),'rb')
     obj = s3.Object(bucket_name,key)        # バケット名とキーを指定してオブジェクト作成
     obj.put( Body=localfile )          # オブジェクトをバケットにPUT Bodyにはbyte,file,stringを指定可能
     obj.wait_until_exists()            # PUT完了を確認

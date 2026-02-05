@@ -6,7 +6,16 @@
 # バケット名を変更したい場合は config.py を編集してください。
 
 import sys
-sys.path.insert(0, '../../../../')
+import os
+
+# スクリプトのディレクトリを取得（どこから実行しても動作するように）
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+sys.path.insert(0, os.path.join(SCRIPT_DIR, '..', '..', '..', '..'))
 from config import BUCKET_NAME
 
 bucket_name = BUCKET_NAME
+
+def get_local_path(filename):
+    """スクリプトディレクトリ内のファイルパスを取得"""
+    return os.path.join(SCRIPT_DIR, filename)

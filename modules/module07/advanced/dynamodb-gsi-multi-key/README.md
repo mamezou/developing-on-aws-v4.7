@@ -36,9 +36,11 @@ EC サイトの注文データで、顧客ごとに以下のクエリを実行�
 
 ## ファイル一覧
 
-- `template.yaml` - CloudFormation テンプレート
+- `myconfig.py` - 設定ファイル（テーブル名など）
+- `setup_table.py` - テーブル作成スクリプト
 - `setup_data.py` - サンプルデータ投入スクリプト
 - `query_demo.py` - クエリデモスクリプト
+- `cleanup.py` - テーブル削除スクリプト
 
 ## 実行手順
 
@@ -46,11 +48,8 @@ EC サイトの注文データで、顧客ごとに以下のクエリを実行�
 # ディレクトリ移動
 cd modules/module07/advanced/dynamodb-gsi-multi-key
 
-# 1. テーブル作成（STUDENT_ID は環境変数から自動取得、または明示的に指定）
-aws cloudformation create-stack \
-  --stack-name demo-gsi-multi-key-${STUDENT_ID:-instructor} \
-  --template-body file://template.yaml \
-  --parameters ParameterKey=StudentId,ParameterValue=${STUDENT_ID:-instructor}
+# 1. テーブル作成
+python3 setup_table.py
 
 # 2. サンプルデータ投入
 python3 setup_data.py
@@ -59,7 +58,7 @@ python3 setup_data.py
 python3 query_demo.py
 
 # 4. クリーンアップ
-aws cloudformation delete-stack --stack-name demo-gsi-multi-key-${STUDENT_ID:-instructor}
+python3 cleanup.py
 ```
 
 ## 制約事項

@@ -4,12 +4,12 @@
 '''
 import boto3
 from botocore.exceptions import NoCredentialsError,ClientError
-from mybucket import bucket_name
+from mybucket import bucket_name, get_local_path
 
 def download_file():
     s3 = boto3.resource('s3')                       # S3リソース取得
     bucket = s3.Bucket(bucket_name)           # S3バケット取得
-    file_path= "Eiffel_downloaded.jpg"    # ダウンロードするオブジェクトのファイルパスを指定
+    file_path= get_local_path("Eiffel_downloaded.jpg")  # ダウンロードするオブジェクトのファイルパスを指定
     key = "Eiffel.jpg"                              # ダウンロードするオブジェクトのキーを指定
     bucket.download_file(key, file_path)            # ダウンロード実行
     print('File Downloaded: ' + file_path)

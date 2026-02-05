@@ -4,7 +4,7 @@
 '''
 import boto3
 from botocore.exceptions import NoCredentialsError,ClientError
-from mybucket import bucket_name
+from mybucket import bucket_name, get_local_path
 
 def get_object():
     s3 = boto3.resource('s3')       # S3リソース取得
@@ -12,7 +12,7 @@ def get_object():
     obj = s3.Object(bucket_name,key)     # バケット名とキーを指定してオブジェクト作成
     response = obj.get()
     body = response['Body'].read()
-    output_file = open('cat_get.jpg','wb')
+    output_file = open(get_local_path('cat_get.jpg'),'wb')
     output_file.write(body)
     output_file.close()
     print('END')

@@ -3,14 +3,14 @@
 '''
 import boto3
 from botocore.exceptions import NoCredentialsError,ClientError
-from mybucket import bucket_name as bucket
+from mybucket import bucket_name as bucket, get_local_path
 
 def get_object():
     s3client = boto3.client('s3')                  # S3クライアント取得
     key = 'cat.jpg'                                # オブジェクトのキー(ファイル名)
     response = s3client.get_object(Bucket=bucket,Key=key)     # バケット名とキーを指定してオブジェクト作成
     body = response['Body'].read()
-    output_file = open('cat_get.jpg','wb')
+    output_file = open(get_local_path('cat_get.jpg'),'wb')
     output_file.write(body)
     output_file.close()
     print('END')

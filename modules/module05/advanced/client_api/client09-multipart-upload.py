@@ -5,11 +5,11 @@ import boto3
 import time
 from boto3.s3.transfer import TransferConfig
 from botocore.exceptions import NoCredentialsError,ClientError
-from mybucket import bucket_name as bucket
+from mybucket import bucket_name as bucket, get_local_path
 
 def multipart_upload_by_upload_file():
     s3client = boto3.client('s3')                 # S3クライアント取得
-    file_path= "AWSIcons.zip"                     # アップロードするオブジェクトのファイルパスを指定
+    file_path= get_local_path("AWSIcons.zip")     # アップロードするオブジェクトのファイルパスを指定
     key = "AWSIcons.zip"                          # アップロードするオブジェクトのキーを指定
     MB = 1024 ** 2
     config = TransferConfig(multipart_threshold=100*MB, multipart_chunksize=10*MB)
@@ -21,7 +21,7 @@ def multipart_upload_by_upload_file():
 
 def multipart_upload_by_upload_fileobj():
     s3client = boto3.client('s3')                 # S3クライアント取得
-    file_path= "AWSIcons.zip"                     # アップロードするオブジェクトのファイルパスを指定
+    file_path= get_local_path("AWSIcons.zip")     # アップロードするオブジェクトのファイルパスを指定
     key = "AWSIcons2.zip"                         # アップロードするオブジェクトのキーを指定
     #
     start = time.time()

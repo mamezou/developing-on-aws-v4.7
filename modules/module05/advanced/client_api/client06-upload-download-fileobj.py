@@ -6,14 +6,14 @@ import io
 import csv
 import json
 from botocore.exceptions import NoCredentialsError,ClientError
-from mybucket import bucket_name as bucket
+from mybucket import bucket_name as bucket, get_local_path
 
 key = 'item.csv'
 s3client = boto3.client('s3')   # S3クライアント取得
 
 # ローカルの csv ファイルを読み込んで Upload
 def upload_fileobjb():
-    with open(key, 'rb') as data:   
+    with open(get_local_path(key), 'rb') as data:   
       s3client.upload_fileobj(data, bucket, key)                     
     print('File Uploaded: ' + key)
 

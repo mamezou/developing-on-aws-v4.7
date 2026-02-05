@@ -5,12 +5,12 @@
 '''
 import boto3
 from botocore.exceptions import NoCredentialsError,ClientError
-from mybucket import bucket_name
+from mybucket import bucket_name, get_local_path
 
 def upload_file():
     s3 = boto3.resource('s3')                 # S3リソース取得
     bucket = s3.Bucket(bucket_name)           # S3バケット取得
-    file_path= "Eiffel.jpg"                   # アップロードするオブジェクトのファイルパスを指定
+    file_path= get_local_path("Eiffel.jpg")   # アップロードするオブジェクトのファイルパスを指定
     key = "Eiffel.jpg"                        # アップロードするオブジェクトのキーを指定
     bucket.upload_file(file_path, key)        # アップロード実行
     print('File Upload: ' + file_path)
