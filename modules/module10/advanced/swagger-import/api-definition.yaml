@@ -1,0 +1,91 @@
+openapi: "3.0.1"
+info:
+  title: "PetStore API"
+  description: "API Gateway Swagger Import Demo"
+  version: "1.0.0"
+
+paths:
+  /pets:
+    get:
+      summary: "List all pets"
+      operationId: "listPets"
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Pet"
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        responses:
+          default:
+            statusCode: "200"
+            responseTemplates:
+              application/json: '[{"id": 1, "name": "Taro", "type": "dog"}, {"id": 2, "name": "Hanako", "type": "cat"}]'
+
+    post:
+      summary: "Create a pet"
+      operationId: "createPet"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Pet"
+      responses:
+        "201":
+          description: "Created"
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: '{"statusCode": 201}'
+        responses:
+          default:
+            statusCode: "201"
+            responseTemplates:
+              application/json: '{"message": "Pet created"}'
+
+  /pets/{petId}:
+    get:
+      summary: "Get a pet by ID"
+      operationId: "getPet"
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pet"
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        responses:
+          default:
+            statusCode: "200"
+            responseTemplates:
+              application/json: '{"id": 1, "name": "Taro", "type": "dog"}'
+
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+          enum: [dog, cat, bird]
