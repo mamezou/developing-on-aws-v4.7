@@ -38,4 +38,4 @@ def load_data():
 
 if __name__ == "__main__":
     load_data()
-    print(f"\n次のステップ: python query_demo.py")
+    print(f"\n次のステップ: python3 query_demo.py")

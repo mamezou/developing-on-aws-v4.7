@@ -46,25 +46,25 @@ aws sts get-caller-identity
 
 ```bash
 # テーブル作成
-python create_table.py
+python3 create_table.py
 
 # 項目追加
-python put_item.py
+python3 put_item.py
 
 # 項目取得
-python get_item.py
+python3 get_item.py
 
 # クエリ実行
-python query.py
+python3 query.py
 
 # GSI作成
-python add_gsi.py
+python3 add_gsi.py
 
 # GSIクエリ
-python query_gsi.py
+python3 query_gsi.py
 
 # クリーンアップ
-python delete_table.py
+python3 delete_table.py
 ```
 
 ## 参考

@@ -114,4 +114,4 @@ if __name__ == "__main__":
     query_lsi()
     query_gsi()
     show_summary()
-    print(f"\nクリーンアップ: python cleanup.py")
+    print(f"\nクリーンアップ: python3 cleanup.py")

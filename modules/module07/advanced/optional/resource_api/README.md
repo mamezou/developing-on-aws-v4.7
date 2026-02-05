@@ -57,10 +57,10 @@ Moviesテーブルを使った一連の操作サンプル
 ```bash
 # movies_example
 cd movies_example
-python Movies00_createTable.py
-python Movies09_loadData.py
-python Movies10_query.py
-python Movies13_deleteTable.py
+python3 Movies00_createTable.py
+python3 Movies09_loadData.py
+python3 Movies10_query.py
+python3 Movies13_deleteTable.py
 
 # Pagenate-sample
 cd Pagenate-sample
