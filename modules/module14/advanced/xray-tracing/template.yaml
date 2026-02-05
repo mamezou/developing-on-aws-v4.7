@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: X-Ray Tracing Demo
+
+Globals:
+  Function:
+    Timeout: 10
+    Tracing: Active  # X-Ray トレースを有効化
+  Api:
+    TracingEnabled: true  # API Gateway の X-Ray を有効化
+
+Resources:
+  TracedFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: app.handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref DemoTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref DemoTable
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - xray:PutTraceSegments
+                - xray:PutTelemetryRecords
+              Resource: '*'
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /trace
+            Method: get
+
+  DemoTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: id
+        Type: String
+
+Outputs:
+  ApiEndpoint:
+    Description: API Gateway endpoint URL
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/trace"
+  FunctionName:
+    Description: Lambda function name
+    Value: !Ref TracedFunction
