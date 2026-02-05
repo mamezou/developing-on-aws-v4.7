@@ -6,9 +6,14 @@
 import boto3
 from decimal import *
 import json
+import os
 from myconfig import TABLE_NAME, REGION
 
-loadFile  = 'testdata.json'
+def get_local_path(filename):
+    """スクリプトと同じディレクトリにあるファイルのパスを取得"""
+    return os.path.join(os.path.dirname(__file__), filename)
+
+loadFile = get_local_path('testdata.json')
 
 # テーブルを作成する関数
 def create_test_table():

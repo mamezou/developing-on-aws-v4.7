@@ -8,8 +8,13 @@
 '''
 import json
 import boto3
+import os
 from decimal import *
 from myconfig import TABLE_NAME, REGION
+
+def get_local_path(filename):
+    """スクリプトと同じディレクトリにあるファイルのパスを取得"""
+    return os.path.join(os.path.dirname(__file__), filename)
 
 LOAD_LIMIT = 200  # ロードする最大件数（None で全件ロード）
 
@@ -26,7 +31,7 @@ def load_movies(movies, dynamodb=None):
 
 
 if __name__ == '__main__':
-    with open("moviedata.json") as json_file:
+    with open(get_local_path("moviedata.json")) as json_file:
         movie_list = json.load(json_file, parse_float=Decimal)
     
     # LOAD_LIMIT が設定されている場合は件数を制限

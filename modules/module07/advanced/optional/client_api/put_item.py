@@ -5,12 +5,17 @@
 import boto3
 import botocore
 import json
+import os
 from  myconfig import table_name
+
+def get_local_path(filename):
+    """スクリプトと同じディレクトリにあるファイルのパスを取得"""
+    return os.path.join(os.path.dirname(__file__), filename)
 
 # テーブルにデータをロードする関数
 def load_data():
     # ファイルオープンとロード 
-    f = open('score_data.json')
+    f = open(get_local_path('score_data.json'))
     scores = json.load(f)  
     
     ddbClient = boto3.client('dynamodb')

@@ -64,9 +64,9 @@ python3 Movies13_deleteTable.py
 
 # Pagenate-sample
 cd Pagenate-sample
-python pagenate-test0.py
-python pagenate-test1.py
-python pagenate-test9-delete.py
+python3 pagenate-test0.py
+python3 pagenate-test1.py
+python3 pagenate-test9-delete.py
 ```
 
 ## 参考

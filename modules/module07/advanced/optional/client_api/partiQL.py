@@ -14,9 +14,9 @@ from boto3.dynamodb.types import TypeDeserializer
 def execute_partiQL(p_userId,p_gameId):
     
     ddbClient = boto3.client('dynamodb')
-    # クエリー発行
+    # クエリー発行（テーブル名にハイフンが含まれる場合はダブルクォートで囲む）
     response = ddbClient.execute_statement(
-        Statement="SELECT gameId,score,life FROM " + table_name + " WHERE userId = ? ",
+        Statement='SELECT gameId,score,life FROM "' + table_name + '" WHERE userId = ? ',
         Parameters=[
            {"N": str(p_userId)}
         ]
