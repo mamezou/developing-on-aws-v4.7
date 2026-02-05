@@ -6,20 +6,27 @@ OpenAPI (Swagger) 定義から REST API を作成し、テスト呼び出しを�
 
 ```bash
 cd modules/module10/advanced/swagger-import
+
+# 受講者ごとにユニークな識別子を設定
+STUDENT_ID=${STUDENT_ID:-instructor}
+echo "STUDENT_ID: ${STUDENT_ID}"
 ```
 
 ### 1. REST API を作成（Swagger インポート）
 
 ```bash
+# API 名を動的に設定して作成
+sed "s/PetStore API/PetStore API ${STUDENT_ID}/" api-definition.yaml > /tmp/api-definition-${STUDENT_ID}.yaml
+
 aws apigateway import-rest-api \
-  --body fileb://api-definition.yaml \
+  --body fileb:///tmp/api-definition-${STUDENT_ID}.yaml \
   --fail-on-warnings
 ```
 
 ### 2. API ID を取得
 
 ```bash
-REST_API_ID=$(aws apigateway get-rest-apis --query "items[?name=='PetStore API'].id" --output text)
+REST_API_ID=$(aws apigateway get-rest-apis --query "items[?name=='PetStore API ${STUDENT_ID}'].id" --output text)
 echo "REST_API_ID: ${REST_API_ID}"
 ```
 

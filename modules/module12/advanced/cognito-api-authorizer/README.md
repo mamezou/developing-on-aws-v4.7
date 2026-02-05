@@ -15,9 +15,11 @@ Cognito ユーザープールで認証し、JWT トークンを使って API Gat
 ```bash
 cd modules/module12/advanced/cognito-api-authorizer
 
-# ユニークな識別子を生成
+# 受講者ごとにユニークな識別子を設定
+STUDENT_ID=${STUDENT_ID:-instructor}
 UNIQUE_ID=$(date +%s | tail -c 5)
-echo "UNIQUE_ID: ${UNIQUE_ID}"
+SUFFIX="${STUDENT_ID}-${UNIQUE_ID}"
+echo "SUFFIX: ${SUFFIX}"
 ```
 
 ### 1. Cognito ユーザープールの作成
@@ -25,18 +27,18 @@ echo "UNIQUE_ID: ${UNIQUE_ID}"
 ```bash
 # ユーザープール作成
 aws cognito-idp create-user-pool \
-  --pool-name api-auth-pool-${UNIQUE_ID} \
+  --pool-name api-auth-pool-${SUFFIX} \
   --auto-verified-attributes email \
   --username-attributes email \
   --policies 'PasswordPolicy={MinimumLength=8,RequireUppercase=false,RequireLowercase=true,RequireNumbers=true,RequireSymbols=false}'
 
-USER_POOL_ID=$(aws cognito-idp list-user-pools --max-results 10 --query "UserPools[?Name=='api-auth-pool-${UNIQUE_ID}'].Id" --output text)
+USER_POOL_ID=$(aws cognito-idp list-user-pools --max-results 10 --query "UserPools[?Name=='api-auth-pool-${SUFFIX}'].Id" --output text)
 echo "USER_POOL_ID: ${USER_POOL_ID}"
 
 # アプリクライアント作成
 aws cognito-idp create-user-pool-client \
   --user-pool-id ${USER_POOL_ID} \
-  --client-name api-client-${UNIQUE_ID} \
+  --client-name api-client-${SUFFIX} \
   --explicit-auth-flows ALLOW_ADMIN_USER_PASSWORD_AUTH ALLOW_REFRESH_TOKEN_AUTH \
   --no-generate-secret
 
@@ -65,23 +67,23 @@ aws cognito-idp admin-set-user-password \
 ```bash
 # Lambda 用 IAM ロール作成
 aws iam create-role \
-  --role-name cognito-api-lambda-role-${UNIQUE_ID} \
+  --role-name cognito-api-lambda-role-${SUFFIX} \
   --assume-role-policy-document file://trust-policy.json
 
 aws iam attach-role-policy \
-  --role-name cognito-api-lambda-role-${UNIQUE_ID} \
+  --role-name cognito-api-lambda-role-${SUFFIX} \
   --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
 
 sleep 10
 
-LAMBDA_ROLE_ARN=$(aws iam get-role --role-name cognito-api-lambda-role-${UNIQUE_ID} --query 'Role.Arn' --output text)
+LAMBDA_ROLE_ARN=$(aws iam get-role --role-name cognito-api-lambda-role-${SUFFIX} --query 'Role.Arn' --output text)
 
 # Lambda 関数作成
 zip function.zip lambda_function.py
 # zip がない場合: python3 -c "import zipfile; zipfile.ZipFile('function.zip','w').write('lambda_function.py')"
 
 aws lambda create-function \
-  --function-name protected-api-${UNIQUE_ID} \
+  --function-name protected-api-${SUFFIX} \
   --runtime python3.12 \
   --role ${LAMBDA_ROLE_ARN} \
   --handler lambda_function.handler \
@@ -93,10 +95,10 @@ aws lambda create-function \
 ```bash
 # REST API 作成
 aws apigateway create-rest-api \
-  --name cognito-protected-api-${UNIQUE_ID} \
+  --name cognito-protected-api-${SUFFIX} \
   --endpoint-configuration types=REGIONAL
 
-REST_API_ID=$(aws apigateway get-rest-apis --query "items[?name=='cognito-protected-api-${UNIQUE_ID}'].id" --output text)
+REST_API_ID=$(aws apigateway get-rest-apis --query "items[?name=='cognito-protected-api-${SUFFIX}'].id" --output text)
 ROOT_RESOURCE_ID=$(aws apigateway get-resources --rest-api-id ${REST_API_ID} --query "items[?path=='/'].id" --output text)
 echo "REST_API_ID: ${REST_API_ID}"
 
@@ -130,7 +132,7 @@ echo "AUTHORIZER_ID: ${AUTHORIZER_ID}"
 ```bash
 REGION=$(aws configure get region)
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-LAMBDA_ARN="arn:aws:lambda:${REGION}:${ACCOUNT_ID}:function:protected-api-${UNIQUE_ID}"
+LAMBDA_ARN="arn:aws:lambda:${REGION}:${ACCOUNT_ID}:function:protected-api-${SUFFIX}"
 
 # GET メソッド作成（Cognito オーソライザー付き）
 aws apigateway put-method \
@@ -151,7 +153,7 @@ aws apigateway put-integration \
 
 # Lambda 実行権限
 aws lambda add-permission \
-  --function-name protected-api-${UNIQUE_ID} \
+  --function-name protected-api-${SUFFIX} \
   --statement-id apigateway-invoke \
   --action lambda:InvokeFunction \
   --principal apigateway.amazonaws.com \
@@ -192,13 +194,13 @@ curl -s -H "Authorization: ${ID_TOKEN}" ${API_URL}
 aws apigateway delete-rest-api --rest-api-id ${REST_API_ID}
 
 # Lambda 削除
-aws lambda delete-function --function-name protected-api-${UNIQUE_ID}
+aws lambda delete-function --function-name protected-api-${SUFFIX}
 
 # IAM ロール削除
 aws iam detach-role-policy \
-  --role-name cognito-api-lambda-role-${UNIQUE_ID} \
+  --role-name cognito-api-lambda-role-${SUFFIX} \
   --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-aws iam delete-role --role-name cognito-api-lambda-role-${UNIQUE_ID}
+aws iam delete-role --role-name cognito-api-lambda-role-${SUFFIX}
 
 # Cognito 削除
 aws cognito-idp admin-delete-user --user-pool-id ${USER_POOL_ID} --username apiuser@example.com

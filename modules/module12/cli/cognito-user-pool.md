@@ -7,22 +7,24 @@
 ```bash
 cd modules/module12/cli
 
-# ユニークな識別子を生成（受講者ごとに異なる値）
+# 受講者ごとにユニークな識別子を設定
+STUDENT_ID=${STUDENT_ID:-instructor}
 UNIQUE_ID=$(date +%s | tail -c 5)
-echo "UNIQUE_ID: ${UNIQUE_ID}"
+SUFFIX="${STUDENT_ID}-${UNIQUE_ID}"
+echo "SUFFIX: ${SUFFIX}"
 ```
 
 ### 1. ユーザープールの作成
 
 ```bash
 aws cognito-idp create-user-pool \
-  --pool-name demo-user-pool-${UNIQUE_ID} \
+  --pool-name demo-user-pool-${SUFFIX} \
   --auto-verified-attributes email \
   --username-attributes email \
   --policies 'PasswordPolicy={MinimumLength=8,RequireUppercase=false,RequireLowercase=true,RequireNumbers=true,RequireSymbols=false}'
 
 # ユーザープール ID を取得
-USER_POOL_ID=$(aws cognito-idp list-user-pools --max-results 10 --query "UserPools[?Name=='demo-user-pool-${UNIQUE_ID}'].Id" --output text)
+USER_POOL_ID=$(aws cognito-idp list-user-pools --max-results 10 --query "UserPools[?Name=='demo-user-pool-${SUFFIX}'].Id" --output text)
 echo "USER_POOL_ID: ${USER_POOL_ID}"
 ```
 
@@ -31,12 +33,12 @@ echo "USER_POOL_ID: ${USER_POOL_ID}"
 ```bash
 aws cognito-idp create-user-pool-client \
   --user-pool-id ${USER_POOL_ID} \
-  --client-name demo-app-client-${UNIQUE_ID} \
+  --client-name demo-app-client-${SUFFIX} \
   --explicit-auth-flows ALLOW_ADMIN_USER_PASSWORD_AUTH ALLOW_REFRESH_TOKEN_AUTH \
   --no-generate-secret
 
 # クライアント ID を取得
-CLIENT_ID=$(aws cognito-idp list-user-pool-clients --user-pool-id ${USER_POOL_ID} --query "UserPoolClients[?ClientName=='demo-app-client-${UNIQUE_ID}'].ClientId" --output text)
+CLIENT_ID=$(aws cognito-idp list-user-pool-clients --user-pool-id ${USER_POOL_ID} --query "UserPoolClients[?ClientName=='demo-app-client-${SUFFIX}'].ClientId" --output text)
 echo "CLIENT_ID: ${CLIENT_ID}"
 ```
 

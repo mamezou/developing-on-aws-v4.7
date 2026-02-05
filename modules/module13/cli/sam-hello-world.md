@@ -17,6 +17,11 @@ sam --version
 ## SAM プロジェクトの初期化
 
 ```bash
+# 受講者ごとにユニークな識別子を設定
+STUDENT_ID=${STUDENT_ID:-instructor}
+PROJECT_NAME="sam-app-${STUDENT_ID}"
+echo "PROJECT_NAME: ${PROJECT_NAME}"
+
 sam init
 ```
 
@@ -26,10 +31,10 @@ sam init
 - Use the most popular runtime and package type? (Python and zip) → `Y`
 - Would you like to enable X-Ray tracing? → `N`
 - Would you like to enable monitoring using CloudWatch Application Insights? → `N`
-- Project name → `sam-app`
+- Project name → `sam-app-${STUDENT_ID}`（上記で設定した値を入力）
 
 ```bash
-cd sam-app
+cd ${PROJECT_NAME}
 ```
 
 ## テンプレートファイルの確認
@@ -65,7 +70,7 @@ sam deploy --guided
 ```
 
 対話形式で以下を入力：
-- Stack Name → `sam-app`
+- Stack Name → `sam-app-${STUDENT_ID}`（プロジェクト名と同じ）
 - AWS Region → `ap-northeast-1`
 - Confirm changes before deploy → `N`
 - Allow SAM CLI IAM role creation → `Y`

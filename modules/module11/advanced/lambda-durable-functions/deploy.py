@@ -8,8 +8,9 @@ import boto3
 import zipfile
 import os
 
-FUNCTION_NAME = 'order-processing-durable'
-ROLE_NAME = 'lambda-durable-demo-role'
+# 環境変数から取得（デフォルト値あり）
+FUNCTION_NAME = os.environ.get('FUNCTION_NAME', 'order-processing-durable')
+ROLE_NAME = os.environ.get('ROLE_NAME', 'lambda-durable-demo-role')
 
 
 def create_deployment_package():

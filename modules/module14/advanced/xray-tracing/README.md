@@ -14,6 +14,11 @@ SAM で Lambda + API Gateway をデプロイし、X-Ray でリクエストをト
 
 ```bash
 cd modules/module14/advanced/xray-tracing
+
+# 受講者ごとにユニークな識別子を設定
+STUDENT_ID=${STUDENT_ID:-instructor}
+STACK_NAME="xray-demo-${STUDENT_ID}"
+echo "STACK_NAME: ${STACK_NAME}"
 ```
 
 ### 1. SAM でデプロイ
@@ -25,7 +30,7 @@ sam deploy --guided
 ```
 
 対話形式で入力：
-- Stack Name → `xray-demo`
+- Stack Name → `xray-demo-${STUDENT_ID}`（上記で設定した値を入力）
 - AWS Region → `ap-northeast-1`
 - Confirm changes before deploy → `N`
 - Allow SAM CLI IAM role creation → `Y`
@@ -38,7 +43,7 @@ sam deploy --guided
 ```bash
 # API エンドポイントを取得
 API_URL=$(aws cloudformation describe-stacks \
-  --stack-name xray-demo \
+  --stack-name ${STACK_NAME} \
   --query "Stacks[0].Outputs[?OutputKey=='ApiEndpoint'].OutputValue" \
   --output text)
 
@@ -81,7 +86,7 @@ AWS コンソール → X-Ray → サービスマップ で視覚的に確認で
 ### 6. クリーンアップ
 
 ```bash
-sam delete --stack-name xray-demo --no-prompts
+sam delete --stack-name ${STACK_NAME} --no-prompts
 ```
 
 ## ファイル

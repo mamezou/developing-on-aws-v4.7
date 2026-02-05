@@ -30,8 +30,15 @@ Step Functions を使わずに、コードファーストでマルチステッ�
 ## 実行方法
 
 ```bash
-# ディレクトリ移動
 cd modules/module11/advanced/lambda-durable-functions
+
+# 受講者ごとにユニークな識別子を設定
+STUDENT_ID=${STUDENT_ID:-instructor}
+ROLE_NAME="lambda-durable-${STUDENT_ID}-role"
+FUNCTION_NAME="order-processing-${STUDENT_ID}"
+echo "STUDENT_ID: ${STUDENT_ID}"
+echo "ROLE_NAME: ${ROLE_NAME}"
+echo "FUNCTION_NAME: ${FUNCTION_NAME}"
 ```
 
 ### 1. IAM ロールの作成
@@ -39,17 +46,17 @@ cd modules/module11/advanced/lambda-durable-functions
 ```bash
 # IAM ロールを作成
 aws iam create-role \
-  --role-name lambda-durable-demo-role \
+  --role-name ${ROLE_NAME} \
   --assume-role-policy-document file://trust-policy.json
 
 # Lambda 実行ポリシーをアタッチ
 aws iam attach-role-policy \
-  --role-name lambda-durable-demo-role \
+  --role-name ${ROLE_NAME} \
   --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
 
 # Durable Functions 用の権限を追加
 aws iam put-role-policy \
-  --role-name lambda-durable-demo-role \
+  --role-name ${ROLE_NAME} \
   --policy-name DurableFunctionsPolicy \
   --policy-document file://durable-policy.json
 
@@ -62,7 +69,8 @@ sleep 10
 > **注意**: AWS CLI 2.33.x では `--durable-function-configuration` オプションがまだサポートされていないため、boto3 を使用します。
 
 ```bash
-python3 deploy.py
+# 環境変数を渡してデプロイ
+FUNCTION_NAME=${FUNCTION_NAME} ROLE_NAME=${ROLE_NAME} python3 deploy.py
 ```
 
 ### 3. 注文の開始
@@ -70,7 +78,7 @@ python3 deploy.py
 ```bash
 # Durable Functions は非同期呼び出しが必要（バージョン指定）
 aws lambda invoke \
-  --function-name order-processing-durable:1 \
+  --function-name ${FUNCTION_NAME}:1 \
   --invocation-type Event \
   --payload '{"order_id": "order-123", "items": [{"product_id": "prod-001", "name": "Widget", "price": 1000, "quantity": 2}]}' \
   response.json
@@ -81,7 +89,7 @@ aws lambda invoke \
 ```bash
 # 実行一覧を取得
 aws lambda list-durable-executions \
-  --function-name order-processing-durable:1
+  --function-name ${FUNCTION_NAME}:1
 
 # 特定の実行の詳細を確認（ARN は list-durable-executions の出力から取得）
 aws lambda get-durable-execution \
@@ -91,17 +99,17 @@ aws lambda get-durable-execution \
 ### 5. クリーンアップ
 
 ```bash
-aws lambda delete-function --function-name order-processing-durable
+aws lambda delete-function --function-name ${FUNCTION_NAME}
 
 aws iam detach-role-policy \
-  --role-name lambda-durable-demo-role \
+  --role-name ${ROLE_NAME} \
   --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
 
 aws iam delete-role-policy \
-  --role-name lambda-durable-demo-role \
+  --role-name ${ROLE_NAME} \
   --policy-name DurableFunctionsPolicy
 
-aws iam delete-role --role-name lambda-durable-demo-role
+aws iam delete-role --role-name ${ROLE_NAME}
 
 rm -f function.zip response.json
 ```

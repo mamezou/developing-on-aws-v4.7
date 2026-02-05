@@ -1,10 +1,16 @@
-#
+# S3 マルチパートアップロード
+
+大容量ファイルのマルチパートアップロードを確認します。
+
+## 実行方法
+
+```bash
+cd modules/module06/cli
+```
 
 ## 変数定義
 
-```
-# バケット名を設定（config.py の BUCKET_NAME と同じ形式）
-# STUDENT_ID は環境変数から取得、未設定の場合は 'instructor'
+```bash
 STUDENT_ID=${STUDENT_ID:-instructor}
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 BUCKET_NAME="dev-on-aws-${STUDENT_ID}-${ACCOUNT_ID}"
@@ -28,7 +34,7 @@ s3=
 ## このサンプルでは2つのターミナルを使用します。
 ## 1つめのターミナル：小さな容量のデータを作成して putObjectを実行します。
 
-```
+```bash
 mkdir -p ~/multipart
 cd ~/multipart
 dd if=/dev/zero of=1MB.img bs=1M count=1
@@ -39,7 +45,7 @@ aws s3 cp 1MB.img s3://${BUCKET_NAME}/
 
 ## 1つめのターミナル：大きな容量のデータを作成して マルチパートアップロードを実行します。
 
-```
+```bash
 mkdir -p ~/multipart
 cd ~/multipart
 dd if=/dev/zero of=500MB.img bs=1M count=500
@@ -50,13 +56,13 @@ aws s3 cp 500MB.img s3://${BUCKET_NAME}/
 
 ## 2つめのターミナルでマルチパートアップロードを実行したら、すぐに1つめのターミナルで list-multipart-uploads コマンドを実行します。
 
-```
+```bash
 aws s3api list-multipart-uploads --bucket ${BUCKET_NAME}
 ```
 
 ## ファイルの削除
 
-```
+```bash
 aws s3 rm s3://${BUCKET_NAME}/1MB.img
 aws s3 rm s3://${BUCKET_NAME}/500MB.img
 ```
