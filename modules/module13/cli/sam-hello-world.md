@@ -31,6 +31,7 @@ sam init
 - Use the most popular runtime and package type? (Python and zip) → `Y`
 - Would you like to enable X-Ray tracing? → `N`
 - Would you like to enable monitoring using CloudWatch Application Insights? → `N`
+- Would you like to set Structured Logging in JSON format? → `N`
 - Project name → `sam-app-${STUDENT_ID}`（上記で設定した値を入力）
 
 ```bash
