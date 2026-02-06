@@ -17,11 +17,13 @@ sam --version
 ## SAM プロジェクトの初期化
 
 ```bash
-# 受講者ごとにユニークな識別子を設定
-STUDENT_ID=${STUDENT_ID:-instructor}
-PROJECT_NAME="sam-app-${STUDENT_ID}"
-echo "PROJECT_NAME: ${PROJECT_NAME}"
+# 受講者ごとにユニークな識別子を確認
+echo "sam-app-${STUDENT_ID}"
+```
 
+上記で表示された値（例: `sam-app-instructor`）をメモしておく。
+
+```bash
 sam init
 ```
 
@@ -29,15 +31,16 @@ sam init
 - Which template source would you like to use? → `1` (AWS Quick Start Templates)
 - Choose an AWS Quick Start application template → `1` (Hello World Example)
 - Use the most popular runtime and package type? (Python and zip) → `N`
-- Which runtime would you like to use? → `python3.12`（EC2 環境に合わせる）
+- Which runtime would you like to use? → `python3.9`（EC2 環境に合わせる）
 - What package type would you like to use? → `1` (Zip)
 - Would you like to enable X-Ray tracing? → `N`
 - Would you like to enable monitoring using CloudWatch Application Insights? → `N`
 - Would you like to set Structured Logging in JSON format? → `N`
-- Project name → `sam-app-${STUDENT_ID}`（上記で設定した値を入力）
+- Project name → 上記で確認した値を入力（例: `sam-app-instructor`）
 
 ```bash
-cd ${PROJECT_NAME}
+# プロジェクトディレクトリに移動
+cd sam-app-${STUDENT_ID}
 ```
 
 ## テンプレートファイルの確認
