@@ -28,7 +28,9 @@ sam init
 対話形式で以下を選択：
 - Which template source would you like to use? → `1` (AWS Quick Start Templates)
 - Choose an AWS Quick Start application template → `1` (Hello World Example)
-- Use the most popular runtime and package type? (Python and zip) → `Y`
+- Use the most popular runtime and package type? (Python and zip) → `N`
+- Which runtime would you like to use? → `python3.12`（EC2 環境に合わせる）
+- What package type would you like to use? → `1` (Zip)
 - Would you like to enable X-Ray tracing? → `N`
 - Would you like to enable monitoring using CloudWatch Application Insights? → `N`
 - Would you like to set Structured Logging in JSON format? → `N`
@@ -51,16 +53,15 @@ cat template.yaml
 ## ビルド
 
 ```bash
-# Docker がある場合（推奨）
-sam build --use-container
-
-# Docker がない場合
 sam build
 ```
 
-## ローカルテスト（Docker 必須）
+※ EC2 環境には Docker がないため `--use-container` は使用不可
+
+## ローカルテスト（Docker 必須、EC2 環境ではスキップ）
 
 ```bash
+# Docker がある環境でのみ実行可能
 sam local invoke HelloWorldFunction
 ```
 
