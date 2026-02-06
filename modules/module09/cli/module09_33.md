@@ -38,7 +38,7 @@ sleep 10
 ## Lambda Functionを作成する
 
 ```bash
-aws lambda create-function --function-name ${FUNCTION_NAME} --handler app.lambda_handler --runtime python3.12 --role ${ROLE_ARN} --environment Variables={MESSAGE="Hello Lambda."} --zip-file fileb://function.zip
+aws lambda create-function --function-name ${FUNCTION_NAME} --handler app.lambda_handler --runtime python3.9 --role ${ROLE_ARN} --environment Variables={MESSAGE="Hello Lambda."} --zip-file fileb://function.zip
 ```
 
 ## Lambda Functionを削除する

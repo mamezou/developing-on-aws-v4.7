@@ -13,7 +13,202 @@ export class StudentEnvironmentStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: StudentEnvironmentStackProps) {
     super(scope, id, props);
 
+    const accountId = cdk.Stack.of(this).account;
+    const region = cdk.Stack.of(this).region;
+
+    // ===========================================
+    // Phase 1: Permissions Boundary
+    // ===========================================
+    const permissionsBoundary = new iam.ManagedPolicy(this, 'StudentPermissionsBoundary', {
+      managedPolicyName: 'StudentPermissionsBoundary',
+      description: 'Permissions boundary for student IAM users and roles',
+      statements: [
+        // S3: 自分のプレフィックスのみ
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ['s3:*'],
+          resources: [
+            'arn:aws:s3:::*instructor*',
+            'arn:aws:s3:::*student*',
+            'arn:aws:s3:::*instructor*/*',
+            'arn:aws:s3:::*student*/*',
+            // SAM managed bucket
+            'arn:aws:s3:::aws-sam-cli-managed-default-*',
+            'arn:aws:s3:::aws-sam-cli-managed-default-*/*',
+          ],
+        }),
+        // S3: バケット一覧は許可（デモで必要）
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ['s3:ListAllMyBuckets', 's3:GetBucketLocation'],
+          resources: ['*'],
+        }),
+        // DynamoDB: 自分のプレフィックスのみ
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ['dynamodb:*'],
+          resources: [
+            `arn:aws:dynamodb:${region}:${accountId}:table/*instructor*`,
+            `arn:aws:dynamodb:${region}:${accountId}:table/*student*`,
+            `arn:aws:dynamodb:${region}:${accountId}:table/*instructor*/index/*`,
+            `arn:aws:dynamodb:${region}:${accountId}:table/*student*/index/*`,
+          ],
+        }),
+        // DynamoDB: テーブル一覧は許可
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ['dynamodb:ListTables', 'dynamodb:DescribeLimits'],
+          resources: ['*'],
+        }),
+        // Lambda: 自分のプレフィックスのみ
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ['lambda:*'],
+          resources: [
+            `arn:aws:lambda:${region}:${accountId}:function:*instructor*`,
+            `arn:aws:lambda:${region}:${accountId}:function:*student*`,
+            `arn:aws:lambda:${region}:${accountId}:layer:*`,
+          ],
+        }),
+        // Lambda: 一覧は許可
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ['lambda:ListFunctions', 'lambda:ListLayers', 'lambda:GetAccountSettings'],
+          resources: ['*'],
+        }),
+        // API Gateway: 全て許可（リソースベースの制限が難しい）
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ['apigateway:*'],
+          resources: ['*'],
+        }),
+        // Step Functions: 自分のプレフィックスのみ
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ['states:*'],
+          resources: [
+            `arn:aws:states:${region}:${accountId}:stateMachine:*instructor*`,
+            `arn:aws:states:${region}:${accountId}:stateMachine:*student*`,
+            `arn:aws:states:${region}:${accountId}:execution:*instructor*:*`,
+            `arn:aws:states:${region}:${accountId}:execution:*student*:*`,
+          ],
+        }),
+        // Step Functions: 一覧は許可
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ['states:ListStateMachines'],
+          resources: ['*'],
+        }),
+        // Cognito: 全て許可（Module 12 で必要）
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ['cognito-idp:*', 'cognito-identity:*'],
+          resources: ['*'],
+        }),
+        // CloudWatch Logs & Metrics
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ['logs:*', 'cloudwatch:*'],
+          resources: ['*'],
+        }),
+        // X-Ray
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ['xray:*'],
+          resources: ['*'],
+        }),
+        // CloudFormation: 自分のプレフィックスのみ（SAM 用）
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ['cloudformation:*'],
+          resources: [
+            `arn:aws:cloudformation:${region}:${accountId}:stack/*instructor*/*`,
+            `arn:aws:cloudformation:${region}:${accountId}:stack/*student*/*`,
+            `arn:aws:cloudformation:${region}:${accountId}:stack/aws-sam-cli-managed-default/*`,
+          ],
+        }),
+        // CloudFormation: 一覧・変換は許可
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: [
+            'cloudformation:ListStacks',
+            'cloudformation:GetTemplateSummary',
+            'cloudformation:ValidateTemplate',
+            'cloudformation:CreateChangeSet',
+          ],
+          resources: ['*'],
+        }),
+        // IAM: ロール作成（Permissions Boundary 必須）
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: [
+            'iam:CreateRole',
+            'iam:DeleteRole',
+            'iam:AttachRolePolicy',
+            'iam:DetachRolePolicy',
+            'iam:PutRolePolicy',
+            'iam:DeleteRolePolicy',
+            'iam:GetRole',
+            'iam:GetRolePolicy',
+            'iam:ListRolePolicies',
+            'iam:ListAttachedRolePolicies',
+            'iam:TagRole',
+            'iam:UntagRole',
+            'iam:UpdateAssumeRolePolicy',
+          ],
+          resources: [
+            `arn:aws:iam::${accountId}:role/*instructor*`,
+            `arn:aws:iam::${accountId}:role/*student*`,
+          ],
+        }),
+        // IAM: PassRole
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ['iam:PassRole'],
+          resources: [
+            `arn:aws:iam::${accountId}:role/*instructor*`,
+            `arn:aws:iam::${accountId}:role/*student*`,
+          ],
+        }),
+        // IAM: 一覧・読み取りは許可
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: [
+            'iam:ListRoles',
+            'iam:ListPolicies',
+            'iam:GetPolicy',
+            'iam:GetPolicyVersion',
+            'iam:CreateServiceLinkedRole',
+          ],
+          resources: ['*'],
+        }),
+        // STS
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ['sts:GetCallerIdentity'],
+          resources: ['*'],
+        }),
+        // EC2: Waiter デモ用（制限付き）
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: [
+            'ec2:RunInstances',
+            'ec2:DescribeInstances',
+            'ec2:TerminateInstances',
+            'ec2:CreateTags',
+            'ec2:DescribeImages',
+            'ec2:DescribeSecurityGroups',
+            'ec2:DescribeSubnets',
+            'ec2:DescribeVpcs',
+          ],
+          resources: ['*'],
+        }),
+      ],
+    });
+
+    // ===========================================
     // 専用 VPC を作成
+    // ===========================================
     const vpc = new ec2.Vpc(this, 'TrainingVpc', {
       vpcName: 'developing-on-aws-training',
       maxAzs: 2,
@@ -48,15 +243,18 @@ export class StudentEnvironmentStack extends cdk.Stack {
       'Allow SSH access'
     );
 
-    // IAM Role for training labs
+    // ===========================================
+    // IAM Role for EC2 (training labs)
+    // ===========================================
     const labRole = new iam.Role(this, 'TrainingLabRole', {
       assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
       managedPolicies: [
         iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMManagedInstanceCore'),
       ],
+      permissionsBoundary: permissionsBoundary,
     });
 
-    // Training lab permissions
+    // EC2 ロールに Permissions Boundary 内の権限を付与
     labRole.addToPolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: [
@@ -71,6 +269,10 @@ export class StudentEnvironmentStack extends cdk.Stack {
         'ec2:DescribeInstances',
         'ec2:TerminateInstances',
         'ec2:CreateTags',
+        'ec2:DescribeImages',
+        'ec2:DescribeSecurityGroups',
+        'ec2:DescribeSubnets',
+        'ec2:DescribeVpcs',
         // CloudWatch Logs & Metrics
         'logs:*',
         'cloudwatch:*',
@@ -84,11 +286,16 @@ export class StudentEnvironmentStack extends cdk.Stack {
         'iam:PassRole',
         'iam:GetRole',
         'iam:GetRolePolicy',
+        'iam:ListRoles',
         'iam:ListRolePolicies',
         'iam:ListAttachedRolePolicies',
+        'iam:ListPolicies',
+        'iam:GetPolicy',
+        'iam:GetPolicyVersion',
         'iam:TagRole',
         'iam:UntagRole',
         'iam:CreateServiceLinkedRole',
+        'iam:UpdateAssumeRolePolicy',
         // Step Functions
         'states:*',
         // STS (for config.py)
@@ -114,9 +321,68 @@ export class StudentEnvironmentStack extends cdk.Stack {
     // Create instances for each student
     const students = ['instructor', ...Array.from({ length: props.studentCount }, (_, i) => `student-${i + 1}`)];
 
+    // ===========================================
+    // マネジメントコンソールログイン URL
+    // ===========================================
+    new cdk.CfnOutput(this, 'ConsoleLoginURL', {
+      value: `https://${accountId}.signin.aws.amazon.com/console`,
+      description: 'AWS Management Console login URL',
+    });
+
     for (const studentId of students) {
-      // Generate random password
-      const password = crypto.randomBytes(8).toString('hex');
+      // Generate random passwords
+      const codeServerPassword = crypto.randomBytes(8).toString('hex');
+      const consolePassword = crypto.randomBytes(12).toString('hex') + 'Aa1!'; // 複雑性要件を満たす
+
+      // ===========================================
+      // Phase 2: IAM ユーザー作成（マネコン用）
+      // ===========================================
+      const iamUserName = studentId.replace('-', ''); // student-1 -> student1
+      const iamUser = new iam.User(this, `User-${studentId}`, {
+        userName: iamUserName,
+        password: cdk.SecretValue.unsafePlainText(consolePassword),
+        passwordResetRequired: false,
+        permissionsBoundary: permissionsBoundary,
+      });
+
+      // IAM ユーザーに権限を付与（Permissions Boundary 内で動作）
+      iamUser.addToPolicy(new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          // S3
+          's3:*',
+          // DynamoDB
+          'dynamodb:*',
+          // Lambda
+          'lambda:*',
+          // CloudWatch Logs & Metrics
+          'logs:*',
+          'cloudwatch:*',
+          // Step Functions
+          'states:*',
+          // API Gateway
+          'apigateway:*',
+          // X-Ray
+          'xray:*',
+          // Cognito
+          'cognito-idp:*',
+          'cognito-identity:*',
+          // CloudFormation
+          'cloudformation:*',
+          // IAM (読み取り中心)
+          'iam:GetRole',
+          'iam:GetRolePolicy',
+          'iam:ListRoles',
+          'iam:ListRolePolicies',
+          'iam:ListAttachedRolePolicies',
+          'iam:ListPolicies',
+          'iam:GetPolicy',
+          'iam:GetPolicyVersion',
+          // STS
+          'sts:GetCallerIdentity',
+        ],
+        resources: ['*'],
+      }));
 
       // User Data script - using raw script to avoid cloud-init issues
       const userData = ec2.UserData.forLinux();
@@ -164,7 +430,7 @@ export class StudentEnvironmentStack extends cdk.Stack {
         `cat > /home/ec2-user/.config/code-server/config.yaml << CODESERVEREOF`,
         'bind-addr: 0.0.0.0:8443',
         'auth: password',
-        `password: ${password}`,
+        `password: ${codeServerPassword}`,
         'cert: false',
         'CODESERVEREOF',
         '',
@@ -228,15 +494,26 @@ export class StudentEnvironmentStack extends cdk.Stack {
         },
       });
 
-      // Outputs
-      new cdk.CfnOutput(this, `${studentId}-URL`, {
+      // Outputs - Code Server
+      new cdk.CfnOutput(this, `${studentId}-CodeServerURL`, {
         value: `http://${instance.instancePublicDnsName}:8443`,
         description: `Code Server URL for ${studentId}`,
       });
 
-      new cdk.CfnOutput(this, `${studentId}-Password`, {
-        value: password,
-        description: `Password for ${studentId}`,
+      new cdk.CfnOutput(this, `${studentId}-CodeServerPassword`, {
+        value: codeServerPassword,
+        description: `Code Server password for ${studentId}`,
+      });
+
+      // Outputs - Management Console
+      new cdk.CfnOutput(this, `${studentId}-ConsoleUser`, {
+        value: iamUserName,
+        description: `Console username for ${studentId}`,
+      });
+
+      new cdk.CfnOutput(this, `${studentId}-ConsolePassword`, {
+        value: consolePassword,
+        description: `Console password for ${studentId}`,
       });
     }
   }

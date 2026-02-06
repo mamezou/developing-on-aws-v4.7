@@ -84,7 +84,7 @@ zip function.zip lambda_function.py
 
 aws lambda create-function \
   --function-name protected-api-${SUFFIX} \
-  --runtime python3.12 \
+  --runtime python3.9 \
   --role ${LAMBDA_ROLE_ARN} \
   --handler lambda_function.handler \
   --zip-file fileb://function.zip
