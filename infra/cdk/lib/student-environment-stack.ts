@@ -73,9 +73,17 @@ export class StudentEnvironmentStack extends cdk.Stack {
         'ec2:CreateTags',
         // CloudWatch Logs
         'logs:*',
-        // IAM (PassRole for Lambda)
+        // IAM (for Lambda role creation in demos)
+        'iam:CreateRole',
+        'iam:DeleteRole',
+        'iam:AttachRolePolicy',
+        'iam:DetachRolePolicy',
+        'iam:PutRolePolicy',
+        'iam:DeleteRolePolicy',
         'iam:PassRole',
         'iam:GetRole',
+        'iam:ListRolePolicies',
+        'iam:ListAttachedRolePolicies',
         // Step Functions
         'states:*',
         // STS (for config.py)
@@ -84,6 +92,9 @@ export class StudentEnvironmentStack extends cdk.Stack {
         'apigateway:*',
         // X-Ray
         'xray:*',
+        // Cognito (Module 12)
+        'cognito-idp:*',
+        'cognito-identity:*',
       ],
       resources: ['*'],
     }));
