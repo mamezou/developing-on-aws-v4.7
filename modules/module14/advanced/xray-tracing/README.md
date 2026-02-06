@@ -10,6 +10,16 @@ SAM で Lambda + API Gateway をデプロイし、X-Ray でリクエストをト
               X-Ray トレース（サービスマップで可視化）
 ```
 
+## 前提条件
+
+```bash
+# Python バージョンを確認（3.9 が必要）
+python3 --version
+
+# SAM CLI がインストールされていることを確認
+sam --version
+```
+
 ## 実行方法
 
 ```bash
@@ -25,12 +35,16 @@ echo "STACK_NAME: ${STACK_NAME}"
 
 ```bash
 sam build
+```
 
+※ EC2 環境には Docker がないため `--use-container` は使用不可
+
+```bash
 sam deploy --guided
 ```
 
-対話形式で入力：
-- Stack Name → `xray-demo-${STUDENT_ID}`（上記で設定した値を入力）
+対話形式で入力（※ 変数展開されないので、上記で確認した値を手入力）：
+- Stack Name → `xray-demo-${STUDENT_ID}`（例: `xray-demo-instructor`）
 - AWS Region → `ap-northeast-1`
 - Confirm changes before deploy → `N`
 - Allow SAM CLI IAM role creation → `Y`
