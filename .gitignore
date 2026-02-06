@@ -5,6 +5,11 @@ __pycache__/
 # Kiro
 .kiro/
 
+# Code Server
+.cache/
+.local/
+*.log
+
 # CDK
 cdk.out/
 node_modules/
