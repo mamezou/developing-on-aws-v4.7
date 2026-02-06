@@ -7,16 +7,20 @@
 ```
 developing-on-aws-v4.7/
 ├── README.md           # このファイル
+├── config.py           # 共通設定（STUDENT_ID, BUCKET_NAME 等）
 ├── modules/            # モジュール別デモコード
-│   ├── module03/       # アクセス許可
+│   ├── module03/       # アクセス許可（IAM）+ SDK基礎
 │   ├── module04/       # ストレージ（S3基礎）
-│   ├── module05/       # Storage 1
-│   ├── module06/       # Storage 2
-│   ├── module07/       # Database 1
-│   ├── module08/       # Database 2
-│   ├── module09/       # Lambda詳細
-│   ├── module10/       # Step Functions
-│   └── module13/       # SAM CLI
+│   ├── module05/       # ストレージオペレーション（S3操作）
+│   ├── module06/       # データベース（DynamoDB基礎）
+│   ├── module07/       # データベースオペレーション（DynamoDB操作）
+│   ├── module08/       # アプリケーションロジック（Lambda）
+│   ├── module09/       # API管理（API Gateway）
+│   ├── module10/       # モダンアプリケーション（Step Functions）
+│   ├── module11/       # アプリケーションユーザー（Cognito）
+│   ├── module12/       # アプリケーションデプロイ（SAM）
+│   ├── module13/       # SAM CLI
+│   └── module14/       # アプリケーション監視（CloudWatch, X-Ray）
 └── infra/              # インフラコード（受講者環境用）
     └── cdk/
 ```
@@ -67,11 +71,15 @@ aws sts get-caller-identity
 
 各モジュールの README を参照してください。
 
-| モジュール | 内容 | README |
-|-----------|------|--------|
-| Module 03 | SDK Waiter & Paginator | [advanced/sdk-waiter-paginator](modules/module03/advanced/sdk-waiter-paginator/README.md) |
-| Module 05 | S3 操作 | [advanced](modules/module05/advanced/README.md) |
-| Module 07 | DynamoDB / LSI vs GSI | [advanced](modules/module07/advanced/README.md) |
+| モジュール | 内容 | README / デモ |
+|-----------|------|---------------|
+| Module 03 | SDK Waiter & Paginator | [sdk-waiter-paginator](modules/module03/advanced/sdk-waiter-paginator/README.md) |
+| Module 05 | S3 Client API / Resource API | [client_api](modules/module05/advanced/client_api/README.md), [resource_api](modules/module05/advanced/resource_api/README.md) |
+| Module 07 | DynamoDB GSI / LSI 比較 | [lsi-gsi-comparison](modules/module07/advanced/lsi-gsi-comparison/README.md), [dynamodb-gsi-multi-key](modules/module07/advanced/dynamodb-gsi-multi-key/README.md) |
+| Module 10 | API Gateway Swagger インポート | [swagger-import](modules/module10/advanced/swagger-import/README.md) |
+| Module 11 | Lambda Durable Functions / Strangler Fig | [lambda-durable-functions](modules/module11/advanced/lambda-durable-functions/README.md), [strangler-fig-pattern](modules/module11/advanced/strangler-fig-pattern/README.md) |
+| Module 12 | Cognito API Authorizer | [cognito-api-authorizer](modules/module12/advanced/cognito-api-authorizer/README.md) |
+| Module 14 | X-Ray トレーシング | [xray-tracing](modules/module14/advanced/xray-tracing/README.md) |
 
 ### CLI サンプル
 
@@ -82,6 +90,10 @@ aws sts get-caller-identity
 各モジュールの `python/` ディレクトリに Python スクリプトがあります。
 
 ```bash
+# ルートディレクトリからでも実行可能
+python3 modules/module05/python/module05_28.py
+
+# または各ディレクトリで実行
 cd modules/module05/python
 python3 module05_28.py
 ```
