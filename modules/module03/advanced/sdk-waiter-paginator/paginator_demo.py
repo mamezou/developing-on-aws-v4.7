@@ -7,7 +7,11 @@ SDK の Paginator を使うことで、NextToken の管理が不要になりま�
 
 import boto3
 import sys
-sys.path.insert(0, '../../../../')
+import os
+
+# スクリプトのディレクトリを基準にパスを解決（どこから実行しても動作）
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(SCRIPT_DIR, '..', '..', '..', '..'))
 from config import BUCKET_NAME, REGION
 
 s3_client = boto3.client('s3', region_name=REGION)

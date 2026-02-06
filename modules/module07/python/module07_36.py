@@ -10,7 +10,11 @@ Module 07: DynamoDB テーブル作成（Client API）
   python3 module07_36.py
 """
 import sys
-sys.path.insert(0, '../../../')
+import os
+
+# スクリプトのディレクトリを基準にパスを解決（どこから実行しても動作）
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(SCRIPT_DIR, '..', '..', '..'))
 from config import STUDENT_ID
 import boto3
 import time

@@ -13,7 +13,11 @@ SDK の Waiter を使うことで、手動ポーリングが不要になりま�
 import boto3
 import time
 import sys
-sys.path.insert(0, '../../../../')
+import os
+
+# スクリプトのディレクトリを基準にパスを解決（どこから実行しても動作）
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(SCRIPT_DIR, '..', '..', '..', '..'))
 from config import STUDENT_ID, REGION
 
 dynamodb = boto3.client('dynamodb', region_name=REGION)

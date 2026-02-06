@@ -9,7 +9,11 @@ Module 06: S3 バケット存在確認
   python3 module06_09.py
 """
 import sys
-sys.path.insert(0, '../../../')
+import os
+
+# スクリプトのディレクトリを基準にパスを解決（どこから実行しても動作）
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(SCRIPT_DIR, '..', '..', '..'))
 from config import BUCKET_NAME
 import boto3
 import botocore

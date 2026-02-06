@@ -12,7 +12,11 @@ Module 06: S3 Presigned URL 生成
   - S3バケットが存在すること
 """
 import sys
-sys.path.insert(0, '../../../')
+import os
+
+# スクリプトのディレクトリを基準にパスを解決（どこから実行しても動作）
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(SCRIPT_DIR, '..', '..', '..'))
 from config import BUCKET_NAME
 import boto3
 
